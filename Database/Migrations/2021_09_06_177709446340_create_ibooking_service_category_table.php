@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIbookingServiceCategoriesTable extends Migration
+class CreateIbookingServiceCategoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateIbookingServiceCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ibooking__service_categories', function (Blueprint $table) {
+        Schema::create('ibooking__service_category', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             // Your fields
@@ -33,6 +33,6 @@ class CreateIbookingServiceCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ibooking__service_categories');
+        Schema::dropIfExists('ibooking__service_category');
     }
 }

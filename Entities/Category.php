@@ -42,4 +42,14 @@ class Category extends CrudModel
   {
     return $this->hasMany('Modules\Ibooking\Entities\Category', 'parent_id');
   }
+
+  /**
+  * Relation many to many with categories
+  * @return mixed
+  */
+  public function services()
+  {
+    return $this->belongsToMany(Category::class, 'ibooking__service_category');
+  }
+
 }

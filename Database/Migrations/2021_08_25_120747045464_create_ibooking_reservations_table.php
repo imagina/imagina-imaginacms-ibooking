@@ -18,9 +18,7 @@ class CreateIbookingReservationsTable extends Migration
       // Your fields
       $table->integer('customer_id')->default(0)->unsigned();
       $table->foreign('customer_id')->references('id')->on('users');
-   
-      $table->timestamp('start_date')->nullable();
-      $table->timestamp('end_date')->nullable();
+      
       $table->tinyInteger('status')->default(1)->unsigned();
       
       $table->text('options')->nullable();
