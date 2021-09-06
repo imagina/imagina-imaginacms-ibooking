@@ -2,15 +2,17 @@
 
 namespace Modules\Ibooking\Entities;
 
-use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Core\Icrud\Entities\CrudModel;
 
-class ReservationItem extends Model
+use Modules\Imeeting\Traits\Meetingable;
+
+class ReservationItem extends CrudModel
 {
-    use Translatable;
+    use Meetingable;
 
     protected $table = 'ibooking__reservation_items';
-    public $translatedAttributes = [];
+    
     protected $fillable = [
       'service_id',
       'resource_id',
@@ -18,7 +20,9 @@ class ReservationItem extends Model
       'category_title',
       'service_title',
       'resource_title',
-      'price'
+      'price',
+      'start_date',
+      'end_date'
     ];
   
   public function reservation(){

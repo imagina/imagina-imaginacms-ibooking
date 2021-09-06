@@ -30,6 +30,9 @@ class CreateIbookingReservationItemsTable extends Migration
           $table->string('service_title');
           $table->string('resource_title');
           $table->float('price', 50, 2)->default(0);
+
+          $table->timestamp('start_date')->nullable();
+          $table->timestamp('end_date')->nullable();
           
           $table->timestamps();
         });

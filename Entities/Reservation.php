@@ -5,12 +5,9 @@ namespace Modules\Ibooking\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
 
-use Modules\Imeeting\Traits\Meetingable;
-
 class Reservation extends CrudModel
 {
   
-  use Meetingable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationTransformer';
   public $requestValidation = [
@@ -22,9 +19,13 @@ class Reservation extends CrudModel
   protected $casts = ['options' => 'array'];
   protected $fillable = [
     'customer_id',
-    'start_date',
-    'end_date',
     'status',
     'options'
   ];
+
+  public function items()
+  {
+    return $this->hasMany(ReservationItems::class);
+  }
+
 }
