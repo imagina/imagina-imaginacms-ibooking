@@ -1,0 +1,16 @@
+{
+    "name": "Ibooking",
+    "alias": "ibooking",
+    "version": "1.0.0",
+	"description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Ibooking\\Providers\\IbookingServiceProvider",
+        "Modules\\Ibooking\\Providers\\EventServiceProvider",
+        "Modules\\Ibooking\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
