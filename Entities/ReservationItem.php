@@ -5,15 +5,16 @@ namespace Modules\Ibooking\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
 
-use Modules\Imeeting\Traits\Meetingable;
+use Modules\Ibooking\Traits\WithMeeting;
 
 class ReservationItem extends CrudModel
 {
-    use Meetingable;
+    use WithMeeting;
 
     protected $table = 'ibooking__reservation_items';
     
     protected $fillable = [
+      'reservation_id',
       'service_id',
       'resource_id',
       'category_id',
@@ -22,11 +23,17 @@ class ReservationItem extends CrudModel
       'resource_title',
       'price',
       'start_date',
-      'end_date'
+      'end_date',
+      'withMeeting'
     ];
   
   public function reservation(){
     return $this->belongsTo(Reservation::class);
+  }
+
+  public function service()
+  {
+    return $this->belongsTo(Service::class);
   }
   
 }

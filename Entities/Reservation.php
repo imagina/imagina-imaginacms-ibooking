@@ -5,15 +5,24 @@ namespace Modules\Ibooking\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
 
+//use Modules\Ibooking\Traits\ReservationWithItemMeeting;
+
 class Reservation extends CrudModel
 {
-  
+
+  //use ReservationWithItemMeeting;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationTransformer';
   public $requestValidation = [
     'create' => 'Modules\Ibooking\Http\Requests\CreateReservationRequest',
     'update' => 'Modules\Ibooking\Http\Requests\UpdateReservationRequest',
   ];
+
+  
+  public $modelRelations = [
+    'items' => 'hasMany'
+  ];
+ 
 
   protected $table = 'ibooking__reservations';
   protected $casts = ['options' => 'array'];
@@ -23,9 +32,17 @@ class Reservation extends CrudModel
     'options'
   ];
 
+  
   public function items()
   {
-    return $this->hasMany(ReservationItems::class);
+    return $this->hasMany(ReservationItem::class);
+  }
+
+  public function customer()
+  {
+    $driver = config('asgard.user.config.driver');
+
+    return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
   }
 
 }

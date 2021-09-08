@@ -8,9 +8,12 @@ use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Ibooking\Entities\Category;
 use Modules\Ibooking\Entities\Resource;
 
+//Traits
+use Modules\Ischedulable\Support\Traits\Schedulable;
+
 class Service extends CrudModel
 {
-  use Translatable;
+  use Translatable, Schedulable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
   public $requestValidation = [
@@ -24,6 +27,7 @@ class Service extends CrudModel
   protected $fillable = [
     'price',
     'status',
+    'withMeeting',
     'options'
   ];
 
@@ -44,4 +48,10 @@ class Service extends CrudModel
   {
     return $this->belongsToMany(Resource::class, 'ibooking__service_resource');
   }
+
+  public function reservationItems()
+  {
+    return $this->hasMany(ReservationItem::class);
+  }
+
 }

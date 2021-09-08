@@ -16,6 +16,9 @@ class CreateIbookingReservationItemsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             // Your fields
+
+          $table->integer('reservation_id')->unsigned()->nullable();
+          $table->foreign('reservation_id')->references('id')->on('ibooking__reservations');
   
           $table->integer('service_id')->unsigned()->nullable();
           $table->foreign('service_id')->references('id')->on('ibooking__services');
@@ -35,6 +38,7 @@ class CreateIbookingReservationItemsTable extends Migration
           $table->timestamp('end_date')->nullable();
           
           $table->timestamps();
+          $table->auditStamps();
         });
     }
 

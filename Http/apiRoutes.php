@@ -7,25 +7,25 @@ $router->group(['prefix' =>'/ibooking/v1'], function (Router $router) {
       'module' => 'ibooking',
       'prefix' => 'categories',
       'controller' => 'CategoryApiController',
-      'middleware' => []
+      'middleware' =>  ['create' => [],'index' => [],'delete' => []] // Just Testing
     ]);
     $router->apiCrud([
       'module' => 'ibooking',
       'prefix' => 'services',
       'controller' => 'ServiceApiController',
-      'middleware' => []
+      'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
     ]);
     $router->apiCrud([
       'module' => 'ibooking',
       'prefix' => 'resources',
       'controller' => 'ResourceApiController',
-      'middleware' => []
+      'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
     ]);
     $router->apiCrud([
       'module' => 'ibooking',
       'prefix' => 'reservations',
       'controller' => 'ReservationApiController',
-      'middleware' => ['create' => [],'index' => []] // Just Testing
+      'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
     ]);
 // append
 
