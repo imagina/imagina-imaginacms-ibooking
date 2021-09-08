@@ -10,10 +10,12 @@ use Modules\Ibooking\Entities\Resource;
 
 //Traits
 use Modules\Ischedulable\Support\Traits\Schedulable;
+use Modules\Icommerce\Support\Traits\Productable;
 
 class Service extends CrudModel
 {
-  use Translatable, Schedulable;
+
+  use Translatable, Schedulable, Productable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
   public $requestValidation = [
