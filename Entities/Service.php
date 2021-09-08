@@ -30,6 +30,7 @@ class Service extends CrudModel
     'price',
     'status',
     'withMeeting',
+    'category_id',
     'options'
   ];
 
@@ -51,9 +52,16 @@ class Service extends CrudModel
     return $this->belongsToMany(Resource::class, 'ibooking__service_resource');
   }
 
+
   public function reservationItems()
   {
     return $this->hasMany(ReservationItem::class);
   }
+
+  public function category()
+  {
+    return $this->belongsTo(Category::class)->with('translations');
+  }
+  
 
 }
