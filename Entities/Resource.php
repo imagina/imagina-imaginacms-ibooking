@@ -24,6 +24,10 @@ class Resource extends CrudModel
     'options'
   ];
 
+  public $modelRelations = [
+    'services' => 'belongsToMany'
+  ];
+
   /**
    * Relation many to many with services
    * @return mixed

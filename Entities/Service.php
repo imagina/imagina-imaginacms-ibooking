@@ -34,6 +34,10 @@ class Service extends CrudModel
     'options'
   ];
 
+  public $modelRelations = [
+    'categories' => 'belongsToMany'
+  ];
+
   /**
    * Relation many to many with categories
    * @return mixed
