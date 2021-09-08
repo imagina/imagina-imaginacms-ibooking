@@ -36,7 +36,7 @@ trait WithMeeting
 		$dataToCreate['meetingAttr'] = [
 			'title' => 'Reunion con Usuario - '.$model->reservation->customer->email,
 			'startTime' => $model->start_date,
-			'email' => 'wavutes@gmail.com' //$model->reservation->customer->email
+			'email' => $model->reservation->customer->email
 		];
 
 		// Entity
