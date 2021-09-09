@@ -17,7 +17,7 @@ trait WithMeeting
 	    static::created(function ($model) {
 
 	    	// Validate Service With Meeting
-	     	if($model->service->withMeeting)
+	     	if($model->service->with_meeting)
 	      		$model->createMeeting($model);
 
 

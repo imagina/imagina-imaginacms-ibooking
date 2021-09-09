@@ -18,7 +18,7 @@ class CreateIbookingServicesTable extends Migration
       // Your fields
       $table->float('price', 50, 2)->default(0);
       $table->tinyInteger('status')->default(1)->unsigned();
-      $table->tinyInteger('withMeeting')->default(0)->unsigned();
+      $table->tinyInteger('with_meeting')->default(0)->unsigned();
 
       $table->integer('category_id')->unsigned()->nullable();
       $table->foreign('category_id')->references('id')->on('ibooking__categories')->onDelete('restrict');

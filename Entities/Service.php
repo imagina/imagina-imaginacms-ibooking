@@ -29,7 +29,7 @@ class Service extends CrudModel
   protected $fillable = [
     'price',
     'status',
-    'withMeeting',
+    'with_meeting',
     'category_id',
     'options'
   ];
