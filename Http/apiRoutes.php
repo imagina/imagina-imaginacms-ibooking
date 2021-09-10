@@ -27,6 +27,13 @@ $router->group(['prefix' =>'/ibooking/v1'], function (Router $router) {
       'controller' => 'ReservationApiController',
       //'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
     ]);
+
+    $router->get('availabilities', [
+      'as' => 'api.ibooking.availability',
+      'uses' => 'AvailabilityApiController@availability',
+    ]);
+
+
 // append
 
 
