@@ -4,7 +4,6 @@ namespace Modules\Ibooking\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Ibooking\Database\Seeders\DataTestDatabaseSeeder;
 
 class IbookingDatabaseSeeder extends Seeder
 {
@@ -15,6 +14,6 @@ class IbookingDatabaseSeeder extends Seeder
    */
   public function run()
   {
-    $this->call(DataTestDatabaseSeeder::class);
+    //$this->call(DataTestDatabaseSeeder::class);
   }
 }
