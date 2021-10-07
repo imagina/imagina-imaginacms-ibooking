@@ -6,10 +6,12 @@ use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Ibooking\Entities\Service;
 
+//Traits
+use Modules\Ischedulable\Support\Traits\Schedulable;
 
 class Resource extends CrudModel
 {
-  use Translatable;
+  use Translatable, Schedulable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
   public $requestValidation = [

@@ -9,13 +9,12 @@ use Modules\Ibooking\Entities\Category;
 use Modules\Ibooking\Entities\Resource;
 
 //Traits
-use Modules\Ischedulable\Support\Traits\Schedulable;
 use Modules\Icommerce\Support\Traits\Productable;
 
 class Service extends CrudModel
 {
 
-  use Translatable, Schedulable, Productable;
+  use Translatable, Productable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
   public $requestValidation = [
@@ -31,6 +30,7 @@ class Service extends CrudModel
     'status',
     'with_meeting',
     'category_id',
+    'shift_time',
     'options'
   ];
 
@@ -66,6 +66,6 @@ class Service extends CrudModel
   {
     return $this->belongsTo(Category::class)->with('translations');
   }
-  
+
 
 }
