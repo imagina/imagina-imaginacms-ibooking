@@ -29,38 +29,38 @@ class AvailabilityApiController extends BaseCrudController
   }
 
   /**
-  * @param serviceId (Required)
-  * @param resourceId (Optional)
-  * @return response (Array)
-  */
+   * @param serviceId (Required)
+   * @param resourceId (Optional)
+   * @return response (Array)
+   */
   public function availability(Request $request)
   {
 
     // Get Params
     $params = $this->getParamsRequest($request)->filter;
-   
+
     // Get Schedule and WorkTimes to this Service ID
-    $service = Service::with('schedule.workTimes')->find($params->serviceId);
+    $service = Service::find($params->serviceId);
     $response = [];
 
     // Exist Resource ID
-    if(isset($params->resourceId)) 
-      $resources = Resource::where('id',$params->resourceId)->get();
+    if (isset($params->resourceId))
+      $resources = Resource::with('schedule.workTimes')->where('id', $params->resourceId)->get();
     else
-      $resources = Resource::whereHas('services', function ($q) use ($service) {
+      $resources = Resource::with('schedule.workTimes')->whereHas('services', function ($q) use ($service) {
         $q->where('ibooking__service_resource.service_id', $service->id);
       })->get();
 
     // To Each Resource
-    foreach($resources as $resource){
+    foreach ($resources as $resource) {
       // Get Reservation Items from Resource
-      $reservationItems = ReservationItem::where('resource_id',$resource->id)->get();
-      
+      $reservationItems = ReservationItem::where('resource_id', $resource->id)->get();
+
       // Get busy shifts
       $busyShifts = [];
-      foreach($reservationItems as $item){
+      foreach ($reservationItems as $item) {
         // Add format to shifts
-        array_push($busyShifts,[
+        array_push($busyShifts, [
           'startTime' => Time::parse($item->start_date)->toTimeString(),
           'endTime' => Time::parse($item->end_date)->toTimeString(),
           'calendarDate' => Time::parse($item->start_date)->toDateString()
@@ -68,14 +68,15 @@ class AvailabilityApiController extends BaseCrudController
       }
 
       //Obtiene shifts por resources
-      $shifts = $service->schedule->getShifts([
+      $shifts = $resource->schedule->getShifts([
+        'shiftTime' => $service->shift_time ?? 30,
         'dateRange' => isset($params->date) ? [$params->date] : [],
         'busyShifts' => $busyShifts
       ]);
 
       //Add Resource Data to the Shift
       foreach ($shifts as $shift) {
-         array_push($response,array_merge($shift, ['resource' => $resource]));
+        array_push($response, array_merge($shift, ['resource' => $resource]));
       }
 
     }
