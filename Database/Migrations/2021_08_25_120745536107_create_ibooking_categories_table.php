@@ -16,7 +16,7 @@ class CreateIbookingCategoriesTable extends Migration
       $table->engine = 'InnoDB';
       $table->increments('id');
       // Your fields
-      $table->integer('parent_id')->nullable();
+      $table->integer('parent_id')->default(0)->nullable();
       $table->tinyInteger('featured')->default(0)->unsigned();
       $table->tinyInteger('status')->default(1)->unsigned();
       $table->text('options')->nullable();

@@ -27,7 +27,8 @@ class Resource extends CrudModel
   ];
 
   public $modelRelations = [
-    'services' => 'belongsToMany'
+    'assignedTo' => 'belongsTo',
+    'services' => 'belongsToMany',
   ];
 
   /**

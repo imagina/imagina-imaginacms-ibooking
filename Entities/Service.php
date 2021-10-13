@@ -35,7 +35,8 @@ class Service extends CrudModel
   ];
 
   public $modelRelations = [
-    'categories' => 'belongsToMany'
+    'categories' => 'belongsToMany',
+    'resources' => 'belongsToMany',
   ];
 
   /**
@@ -55,7 +56,6 @@ class Service extends CrudModel
   {
     return $this->belongsToMany(Resource::class, 'ibooking__service_resource');
   }
-
 
   public function reservationItems()
   {
