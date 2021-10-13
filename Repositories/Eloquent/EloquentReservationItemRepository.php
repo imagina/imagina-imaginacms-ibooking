@@ -3,9 +3,9 @@
 namespace Modules\Ibooking\Repositories\Eloquent;
 
 use Modules\Ibooking\Repositories\ReservationItemRepository;
-use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
+use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 
-class EloquentReservationItemRepository extends EloquentBaseRepository implements ReservationItemRepository
+class EloquentReservationItemRepository extends EloquentCrudRepository implements ReservationItemRepository
 {
 
 	/**
@@ -23,7 +23,7 @@ class EloquentReservationItemRepository extends EloquentBaseRepository implement
    	*/
   	public function filterQuery($query, $filter)
   	{
-    
+
     /**
      * Note: Add filter name to replaceFilters attribute to replace it
      *
