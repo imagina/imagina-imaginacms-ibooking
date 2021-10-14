@@ -40,4 +40,21 @@ class Resource extends CrudModel
   {
     return $this->belongsToMany(Service::class, 'ibooking__service_resource');
   }
+
+  /*
+  * Accessors
+  */
+  public function getOptionsAttribute($value)
+  {
+    return json_decode($value);
+  }
+
+  /*
+  * Mutators
+  */
+  public function setOptionsAttribute($value)
+  {
+    $this->attributes['options'] = json_encode($value);
+  }
+  
 }
