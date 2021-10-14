@@ -1,5 +1,17 @@
 <?php
 
 return [
-    'name' => 'Ibooking'
+  'name' => 'Ibooking',
+  //Media Fillables
+  'mediaFillable' => [
+    'category' => [
+      'mainimage' => 'single'
+    ],
+    'service' => [
+      'mainimage' => 'single'
+    ],
+    'resource' => [
+      'mainimage' => 'single'
+    ],
+  ],
 ];

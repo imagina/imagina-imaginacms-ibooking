@@ -10,11 +10,12 @@ use Modules\Ibooking\Entities\Resource;
 
 //Traits
 use Modules\Icommerce\Support\Traits\Productable;
+use Modules\Media\Support\Traits\MediaRelation;
 
 class Service extends CrudModel
 {
 
-  use Translatable, Productable;
+  use Translatable, Productable, MediaRelation;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
   public $requestValidation = [

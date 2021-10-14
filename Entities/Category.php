@@ -4,10 +4,11 @@ namespace Modules\Ibooking\Entities;
 
 use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
+use Modules\Media\Support\Traits\MediaRelation;
 
 class Category extends CrudModel
 {
-  use Translatable;
+  use Translatable, MediaRelation;
 
   public $transformer = 'Modules\Ibooking\Transformers\CategoryTransformer';
   public $requestValidation = [
@@ -44,9 +45,9 @@ class Category extends CrudModel
   }
 
   /**
-  * Relation many to many with categories
-  * @return mixed
-  */
+   * Relation many to many with categories
+   * @return mixed
+   */
   public function services()
   {
     return $this->belongsToMany(Category::class, 'ibooking__service_category');
