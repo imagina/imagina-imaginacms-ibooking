@@ -1,7 +1,6 @@
 <?php
 return [
-    'service' => [
-        'index' => 'servicios',
-        'buy' => 'comprar',
-    ]
+  'categories' => 'categorias',
+  'services' => 'servicios',
+  'resources' => 'recursos',
 ];

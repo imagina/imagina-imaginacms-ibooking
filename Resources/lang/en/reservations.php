@@ -12,6 +12,7 @@ return [
     ],
     'button' => [
         'create reservation' => 'Create a reservation',
+        'reserve' => 'Reserve',
     ],
     'table' => [
     ],

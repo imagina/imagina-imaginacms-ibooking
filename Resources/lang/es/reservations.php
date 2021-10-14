@@ -11,7 +11,8 @@ return [
         'edit reservation' => 'Edit a reservation',
     ],
     'button' => [
-        'create reservation' => 'Create a reservation',
+        'create reservation' => 'Crear una reservación',
+        'reserve' => 'Reservar',
     ],
     'table' => [
     ],
