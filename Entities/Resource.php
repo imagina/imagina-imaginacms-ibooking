@@ -10,9 +10,11 @@ use Modules\Ibooking\Entities\Service;
 use Modules\Ischedulable\Support\Traits\Schedulable;
 use Modules\Media\Support\Traits\MediaRelation;
 
+use Modules\Imeeting\Traits\Meetingable;
+
 class Resource extends CrudModel
 {
-  use Translatable, Schedulable, MediaRelation;
+  use Translatable, Schedulable, MediaRelation, Meetingable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
   public $requestValidation = [
