@@ -4,6 +4,7 @@ namespace Modules\Ibooking\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 //use Modules\Ibooking\Traits\ReservationWithItemMeeting;
 
@@ -11,6 +12,8 @@ class Reservation extends CrudModel
 {
 
   //use ReservationWithItemMeeting;
+
+  use BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationTransformer';
   public $requestValidation = [

@@ -5,6 +5,7 @@ namespace Modules\Ibooking\Entities;
 use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Ibooking\Entities\Service;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 //Traits
 use Modules\Ischedulable\Support\Traits\Schedulable;
@@ -14,7 +15,7 @@ use Modules\Imeeting\Traits\Meetingable;
 
 class Resource extends CrudModel
 {
-  use Translatable, Schedulable, MediaRelation, Meetingable;
+  use Translatable, Schedulable, MediaRelation, Meetingable, BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
   public $requestValidation = [

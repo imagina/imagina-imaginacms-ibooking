@@ -7,6 +7,7 @@ use Modules\Core\Icrud\Entities\CrudModel;
 
 use Modules\Ibooking\Entities\Category;
 use Modules\Ibooking\Entities\Resource;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 //Traits
 use Modules\Icommerce\Support\Traits\Productable;
@@ -15,7 +16,7 @@ use Modules\Media\Support\Traits\MediaRelation;
 class Service extends CrudModel
 {
 
-  use Translatable, Productable, MediaRelation;
+  use Translatable, Productable, MediaRelation, BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
   public $requestValidation = [

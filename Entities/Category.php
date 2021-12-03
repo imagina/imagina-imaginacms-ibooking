@@ -5,10 +5,11 @@ namespace Modules\Ibooking\Entities;
 use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Media\Support\Traits\MediaRelation;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Category extends CrudModel
 {
-  use Translatable, MediaRelation;
+  use Translatable, MediaRelation, BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\CategoryTransformer';
   public $requestValidation = [

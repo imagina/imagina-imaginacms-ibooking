@@ -80,6 +80,8 @@ class ReservationApiController extends BaseCrudController
           "quantity" => 1,
           "options" => ['reservationItemData' => $reservationItem] // Duda - This is saved in the order - need to create reservation after payment
         ];
+
+        \Log::info("Ibooking: Reservation Api Controller - Create - Products: ".json_encode($products));
       }
 
       // Create the Cart
