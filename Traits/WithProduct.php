@@ -68,4 +68,8 @@ trait WithProduct
         return $this->morphMany("Modules\Icommerce\Entities\Product", 'entity');
     }
 
+    public function getProductAttribute(){
+        return $this->products->first();
+    }
+
 }
