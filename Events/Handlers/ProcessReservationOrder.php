@@ -15,15 +15,16 @@ class ProcessReservationOrder
     public function handle($event)
     {
 
-        \Log::info('Ibooking: Event - Process Reservation');
+        \Log::info('Ibooking: Events|Handlers|ProcessReservationOrder');
 
         $order = $event->order;
         //Order is Proccesed
         if($order->status_id==13){
 
+            // Get Customer Id from Order
             $reservationData = ['customer_id' => $order->customer_id,'items' => []];
 
-            \Log::info('Ibooking: Event - Data: '.json_encode($reservationData));
+            \Log::info('Ibooking: Events|Handlers|ProcessReservationOrder|ReservationData: '.json_encode($reservationData));
 
             foreach($order->orderItems as $item){
                 // Reservation Data
@@ -31,7 +32,7 @@ class ProcessReservationOrder
 
                 $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
-                // Create Reservation
+                // Create Reservation and ReservationItem
                 $reservationRepository->create($reservationData);
 
                 // Log
