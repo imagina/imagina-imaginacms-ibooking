@@ -47,7 +47,7 @@ class CheckoutService
 
         // Set Products to Cart
         $products[] = [
-          "id" => $service->product->id, // OJO - getProductAttribute
+          "id" => $service->product->id, // OJO - getProductAttribute - Version que ya estaba
           "quantity" => 1,
           "options" => ['reservationItemData' => $reservationItem] // Duda - This is saved in the order - need to create reservation after payment
         ];
