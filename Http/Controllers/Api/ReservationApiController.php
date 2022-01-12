@@ -44,7 +44,16 @@ class ReservationApiController extends BaseCrudController
       //\Log::info("Ibooking: ReservationApiController|Create|ModelDataRequest: ".json_encode($modelData['items']));
 
       //IF REQUIRE PAYMENT
-      $checkoutCart = app("Modules\Ibooking\Services\CheckoutService")->create($modelData['items']);
+      if(is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment',null, false)){
+
+        $checkoutCart = app("Modules\Ibooking\Services\CheckoutService")->create($modelData['items']);
+
+      }else{
+
+        // Create Reservation
+        // Create Notification
+
+      }
 
 
       \DB::commit(); //Commit to Data Base
