@@ -36,8 +36,7 @@ class ReservationItem extends CrudModel
     'resource_title',
     'price',
     'start_date',
-    'end_date',
-    'withMeeting'
+    'end_date'
   ];
 
   public function reservation()
