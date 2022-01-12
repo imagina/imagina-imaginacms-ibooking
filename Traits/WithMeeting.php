@@ -33,7 +33,7 @@ trait WithMeeting
 	public function createMeeting($model)
 	{
 	   	
-	   	\Log::info('Ibooking: Trait WithMeeting - createMeeting');
+	   	//\Log::info('Ibooking: Traits|WithMeeting|CreateMeeting');
 
 	    // Data Metting
 		$dataToCreate['meetingAttr'] = [
