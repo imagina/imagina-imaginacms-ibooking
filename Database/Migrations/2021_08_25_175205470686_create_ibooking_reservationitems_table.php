@@ -29,9 +29,9 @@ class CreateIbookingReservationItemsTable extends Migration
           $table->integer('category_id')->unsigned()->nullable();
           $table->foreign('category_id')->references('id')->on('ibooking__categories');
           
-          $table->string('category_title');
-          $table->string('service_title');
-          $table->string('resource_title');
+          $table->string('category_title')->nullable();
+          $table->string('service_title')->nullable();
+          $table->string('resource_title')->nullable();
           $table->float('price', 50, 2)->default(0);
 
           $table->timestamp('start_date')->nullable();
