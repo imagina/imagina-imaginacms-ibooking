@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'single' => 'Categoria',
     'list resource' => 'List categories',
     'create resource' => 'Create categories',
     'edit resource' => 'Edit categories',

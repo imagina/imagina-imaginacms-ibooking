@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'single' => 'Reservation',
     'list resource' => 'List reservations',
     'create resource' => 'Create reservations',
     'edit resource' => 'Edit reservations',
