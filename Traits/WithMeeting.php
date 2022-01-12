@@ -16,10 +16,11 @@ trait WithMeeting
 	    //Listen event after create model
 	    static::created(function ($model) {
 
-	    	\Log::info('Ibooking: Service With Meeting: '.$model->service->with_meeting);
+
+	    	//\Log::info('Ibooking: Service With Meeting: '.$model->service->with_meeting);
 
 	    	// Validate Service With Meeting
-	     	if($model->service->with_meeting)
+	     	if(isset($model->service) && $model->service->with_meeting)
 	      		$model->createMeeting($model);
 
 	    });
