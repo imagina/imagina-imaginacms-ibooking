@@ -3,11 +3,13 @@
 return [
  
   'createExternalMeeting' => [
-    'value' => false,
+    'value' =>  "0",
     'name' => 'ibooking::createExternalMeeting',
     'type' => 'checkbox',
     'props' => [
-      'label' => 'Crear External Meeting'
+      'label' => 'ibooking::common.settings.createExternalMeeting',
+      'trueValue' => "1",
+      'falseValue' => "0",
     ]
   ],
   
