@@ -48,4 +48,14 @@ class Reservation extends CrudModel
     return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
   }
 
+  public function setOptionsAttribute($value)
+  {
+    $this->attributes['options'] = json_encode($value);
+  }
+
+  public function getOptionsAttribute($value)
+  {
+    return json_decode($value);
+  }
+
 }
