@@ -11,6 +11,12 @@ return [
   "settings" => [
       "createExternalMeeting" => "Create external meeting",
       "reservationWithPayment" => "Create Reservation with payment (Checkout Process)",
-  ]
+      'usersToNotify' => 'Users to Notify',
+      'emails' => 'Webmaster Email',
+  ],
+
+  'settingHints' => [
+    'emails' => "Type the email and press enter key"
+  ],
 
 ];
