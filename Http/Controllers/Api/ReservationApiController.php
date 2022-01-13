@@ -10,16 +10,19 @@ use Modules\Ibooking\Entities\Reservation;
 
 use Illuminate\Http\Request;
 
+
 class ReservationApiController extends BaseCrudController
 {
 
   public $model;
   public $modelRepository;
+  public $reservationService;
 
   public function __construct(Reservation $model, ReservationRepository $modelRepository)
   {
     $this->model = $model;
     $this->modelRepository = $modelRepository;
+    $this->reservationService = app("Modules\Ibooking\Services\ReservationService");
   }
 
   /**
@@ -40,18 +43,26 @@ class ReservationApiController extends BaseCrudController
         $this->validateRequestApi(new $this->model->requestValidation['create']($modelData));
       }
 
+      //\Log::info("Ibooking: ReservationApiController|Create|ModelDataRequest: ".json_encode($modelData));
 
-      //\Log::info("Ibooking: ReservationApiController|Create|ModelDataRequest: ".json_encode($modelData['items']));
-
-      //IF REQUIRE PAYMENT
+      /*
+      ****Process with payment****
+      * 1. Create Checkout Cart
+      * 2. Create Order
+      * 3. User Pays the order (Event - OrderWasProcessed)
+      * 4. Event - ProcessReservationOrder: 
+      *     - Create Reservation
+              - Create Reservation Item - (Trait WithMeeting)
+              - Create Meeting
+              - Create Notification
+      */
       if(is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment',null, false)){
 
-        $checkoutCart = app("Modules\Ibooking\Services\CheckoutService")->create($modelData['items']);
+        $checkoutCart = $this->reservationService->createCheckoutCart($modelData['items']);
 
       }else{
 
-        // Create Reservation
-        // Create Notification
+        $reservation = $this->reservationService->createReservation($modelData);
 
       }
 
