@@ -19,6 +19,13 @@
 		 		</tr>
 		 	@endif
 
+		 	@if(!empty($item->resource_title))
+		 		<tr>
+			 		<td>{{trans('ibooking::resources.single')}}:</td>
+			 		<td>{{$item->resource_title}}</td>
+		 		</tr>
+		 	@endif
+
 		 	@if(!empty($item->service_title))
 		 		<tr>
 			 		<td>{{trans('ibooking::services.single')}}:</td>
@@ -26,10 +33,10 @@
 		 		</tr>
 		 	@endif
 
-		 	@if(($item->price)>0)
+		 	@if($item->price>0)
 		 		<tr>
 			 		<td>{{trans('ibooking::common.table.price')}}:</td>
-			 		<td>{{$item->price}}</td>
+			 		<td>{{formatMoney($item->price)}}</td>
 		 		</tr>
 		 	@endif
 

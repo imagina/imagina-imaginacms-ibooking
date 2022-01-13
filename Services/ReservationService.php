@@ -55,8 +55,8 @@ class ReservationService
     $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
     //Data testing
-    //$data['email'] = "wxxxxx@gmail.com"; 
-    //$data['customer_id'] = null;
+    $data['email'] = "wavutes@gmail.com"; 
+    $data['customer_id'] = null;
 
     // Extra Data in Options
     // TODO CHANGE - Define that the "extra data" comes in an array called "form" from Frontend
@@ -77,6 +77,7 @@ class ReservationService
   }
 
   /**
+  * Get data from each item and create one array with the information 
   * @return Array - [service,reservationItem]
   */
   public function createReservationItemData($item){
@@ -88,6 +89,7 @@ class ReservationService
           $service = app("Modules\Ibooking\Repositories\ServiceRepository")->find($item['service_id']);
           $reservationItem['service_id'] = $service->id;
           $reservationItem['service_title'] = $service->title;
+          $reservationItem['price'] = $service->price;
 
           // Added service
           $response['service'] = $service;
