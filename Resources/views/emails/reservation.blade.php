@@ -36,14 +36,14 @@
 		 	@if(!empty($item->start_date))
 		 		<tr>
 			 		<td>{{trans('ibooking::common.table.start date')}}:</td>
-			 		<td>{{$item->start_date}}</td>
+			 		<td>{{date(config('asgard.ibooking.config.hourFormat'), strtotime($item->start_date))}}</td>
 		 		</tr>
 		 	@endif
 
 		 	@if(!empty($item->end_date))
 		 		<tr>
 			 		<td>{{trans('ibooking::common.table.end date')}}:</td>
-			 		<td>{{$item->end_date}}</td>
+			 		<td>{{date(config('asgard.ibooking.config.hourFormat'), strtotime($item->end_date))}}</td>
 		 		</tr>
 		 	@endif
 

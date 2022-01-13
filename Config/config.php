@@ -2,6 +2,7 @@
 
 return [
   'name' => 'Ibooking',
+
   //Media Fillables
   'mediaFillable' => [
     'category' => [
@@ -14,4 +15,11 @@ return [
       'mainimage' => 'single'
     ],
   ],
+
+  /*
+  * Format to hour
+  * used = date(format, strtotime($item->end_date))
+  */
+  'hourFormat' => 'd-m-Y H:i:s',
+
 ];
