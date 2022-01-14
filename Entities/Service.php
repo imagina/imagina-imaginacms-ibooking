@@ -10,7 +10,7 @@ use Modules\Ibooking\Entities\Resource;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 //Traits
-use Modules\Ibooking\Traits\WithProduct;
+use Modules\Isite\Traits\WithProduct;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Iforms\Support\Traits\Formeable;
 

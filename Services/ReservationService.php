@@ -54,9 +54,9 @@ class ReservationService
 
     $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
-    //Data testing
-    $data['email'] = "wavutes@gmail.com"; 
-    $data['customer_id'] = null;
+    //======= JUST TESTING
+    //$data['email'] = "xxxxx@xxxx.xxx"; 
+    //$data['customer_id'] = null;
 
     // Extra Data in Options
     // TODO CHANGE - Define that the "extra data" comes in an array called "form" from Frontend
