@@ -4,6 +4,8 @@ namespace Modules\Ibooking\Traits;
 
 use Modules\Imeeting\Entities\Meeting;
 
+//Events
+use Modules\Ibooking\Events\ReservationWasCreated;
 
 /**
 * Trait to create a meeting with data from an entity
@@ -65,19 +67,10 @@ trait WithMeeting
 		    throw new \Exception($meeting['errors'], 500);
 		}else{
 
-			$idsToNotify = [$model->reservation->customer->id,$model->resource->created_by];
+			$extraParams['broadcastTo'] = [$model->reservation->customer->id,$model->resource->created_by];
 
-			//Send pusher notification
-	        app('Modules\Notification\Services\Inotification')->to(['broadcast' => $idsToNotify])->push([
-	            "title" => "Reunion Creada",
-	            "message" => "Reunion Creada",
-	            "link" => url(''),
-	            "frontEvent" => [
-	              "name" => "ibooking.new.reservation",
-	            ],
-	            "setting" => ["saveInDatabase" => 1]
-	         ]);
-          	
+			// Send Email and Notification Iadmin
+    		event(new ReservationWasCreated($model->reservation,$extraParams));
 
 		}
 

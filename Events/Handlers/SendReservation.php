@@ -32,6 +32,7 @@ class SendReservation
     try {
 
       $reservation = $event->reservation;
+      $params = $event->params;
       
       $subject = trans('ibooking::reservations.messages.purchase reservation') . " #" . $reservation->id;
       
@@ -45,6 +46,14 @@ class SendReservation
       $users = User::whereIn("id", $usersToNotify)->get();
       $emailTo = array_merge($emailTo, $users->pluck('email')->toArray());
       $broadcastTo = $users->pluck('id')->toArray();
+
+      //Extra params from event
+      if(!is_null($params)){
+        if(isset($params['broadcastTo'])){
+           $broadcastTo = array_merge($broadcastTo,$params['broadcastTo']);
+           //\Log::info("Ibooking: Events|Handler|SendReservation|broadcastTo: ".json_encode($broadcastTo));
+        }
+      }
 
 
       // Testing
