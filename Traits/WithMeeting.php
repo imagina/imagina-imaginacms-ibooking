@@ -13,17 +13,20 @@ trait WithMeeting
    	*/
 	public static function bootWithMeeting()
 	{
-	    //Listen event after create model
-	    static::created(function ($model) {
 
+		// Validate Only Imeeting Enabled
+        if(is_module_enabled('Imeeting')){
+		    //Listen event after create model
+		    static::created(function ($model) {
 
-	    	//\Log::info('Ibooking: Service With Meeting: '.$model->service->with_meeting);
+		    	//\Log::info('Ibooking: Service With Meeting: '.$model->service->with_meeting);
 
-	    	// Validate Service With Meeting
-	     	if(isset($model->service) && $model->service->with_meeting)
-	      		$model->createMeeting($model);
+		    	// Validate Service With Meeting
+		     	if(isset($model->service) && $model->service->with_meeting)
+		      		$model->createMeeting($model);
 
-	    });
+		    });
+		}
 	    
 	}
 
