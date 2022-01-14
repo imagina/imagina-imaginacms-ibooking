@@ -19,4 +19,8 @@ return [
     'emails' => "Type the email and press enter key"
   ],
 
+  "meeting" => [
+    "title" => "Meeting with User - ",
+  ],
+
 ];

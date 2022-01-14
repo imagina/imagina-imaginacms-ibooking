@@ -4,6 +4,11 @@ namespace Modules\Ibooking\Traits;
 
 use Modules\Imeeting\Entities\Meeting;
 
+
+/**
+* Trait to create a meeting with data from an entity
+* Used in : Ibooking - ReservationItem
+*/
 trait WithMeeting
 {
 
@@ -19,7 +24,7 @@ trait WithMeeting
 		    //Listen event after create model
 		    static::created(function ($model) {
 
-		    	//\Log::info('Ibooking: Service With Meeting: '.$model->service->with_meeting);
+		    	\Log::info('Ibooking: Traits|WithMeeting|BootWithMeeting|WithMeeting: '.$model->service->with_meeting);
 
 		    	// Validate Service With Meeting
 		     	if(isset($model->service) && $model->service->with_meeting)
@@ -40,7 +45,7 @@ trait WithMeeting
 
 	    // Data Metting
 		$dataToCreate['meetingAttr'] = [
-			'title' => 'Reunion con Usuario - '.$model->reservation->customer->email,
+			'title' => trans('ibooking::common.meeting.title').$model->reservation->customer->email,
 			'startTime' => $model->start_date,
 			'email' => $model->resource->options->email //Host
 		];
@@ -51,7 +56,7 @@ trait WithMeeting
 			'type' => get_class($model),  
 		];
 
-		//\Log::info('Ibooking: Trait WithMeeting - data: '.json_encode($dataToCreate));
+		//\Log::info('Ibooking: Traits|WithMeeting|CreateMeeting|DataToCreate: '.json_encode($dataToCreate));
 
 		// Create meeting with Provider
 		$meeting = app('Modules\Imeeting\Services\MeetingService')->create($dataToCreate);
@@ -61,8 +66,6 @@ trait WithMeeting
 		}else{
 
 			$idsToNotify = [$model->reservation->customer->id,$model->resource->created_by];
-
-			\Log::info('Ibooking: Trait WithMeeting - Pusher Notification IDS: '.json_encode($idsToNotify));
 
 			//Send pusher notification
 	        app('Modules\Notification\Services\Inotification')->to(['broadcast' => $idsToNotify])->push([

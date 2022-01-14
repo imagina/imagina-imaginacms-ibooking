@@ -19,4 +19,8 @@ return [
     'emails' => "Ingresa el correo y presiona enter"
   ],
 
+  "meeting" => [
+    "title" => "Reunion con Usuario - ",
+  ],
+
 ];
