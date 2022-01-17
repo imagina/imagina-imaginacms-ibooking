@@ -17,9 +17,9 @@ return [
   ],
 
   /*
-  * Format to hour
-  * used = date(format, strtotime($item->end_date))
+  * Format to hour - strtotime method
+  * Used: Email
   */
-  'hourFormat' => 'd-m-Y H:i:s',
+  'hourFormat' => 'd-m-Y H:i A',
 
 ];
