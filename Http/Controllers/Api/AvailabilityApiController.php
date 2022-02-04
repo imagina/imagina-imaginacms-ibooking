@@ -71,6 +71,7 @@ class AvailabilityApiController extends BaseCrudController
       $shifts = $resource->schedule->getShifts([
         'shiftTime' => $service->shift_time ?? 30,
         'dateRange' => isset($params->date) ? [$params->date] : [],
+        'timeRange' => isset($params->time) ? [$params->time] : [],
         'busyShifts' => $busyShifts
       ]);
 
