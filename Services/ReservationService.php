@@ -14,7 +14,7 @@ class ReservationService
   /**
   * @return cart service created
   */
-  public function createCheckoutCart($items){
+  public function createCheckoutCart($items,$reservation=null){
   
     $cartService = app("Modules\Icommerce\Services\CartService");
     $products = [];
@@ -28,14 +28,14 @@ class ReservationService
         $products[] = [
           "id" => $reservationItemData['service']->product->id, // OJO - getProductAttribute - Version que ya estaba
           "quantity" => 1,
-          "options" => ['reservationItemData' => $reservationItemData['reservationItem']]
+          "options" => ['reservationId'=>$reservation->id,'reservationItemData' => $reservationItemData['reservationItem']]
         ];
-
+   
         //\Log::info("Ibooking: Services|CheckoutService|Create: ".json_encode($products));
       }
 
       // Create the Cart
-      $cartService->create(["products" => $products]);
+      $cart = $cartService->create(["products" => $products]);
 
       return $cartService;
   }
@@ -45,27 +45,30 @@ class ReservationService
   */
   public function createReservation($data){
 
+    // Get Customer Id if exist
+    if(isset($data['customer_id']))
+      $reservationData = ['customer_id' => $data['customer_id'],'items' => []];
 
+    // If no exist is 0 (Pending)
+    $reservationData['status'] = (int)setting('ibooking::reservationStatusDefault',null,0);
+    
     // Add Reservation Item for ItemS
     foreach ($data['items'] as $item) {
       $reservationItemData = $this->createReservationItemData($item);
       $reservationData['items'][] = $reservationItemData['reservationItem'];
     }
 
-    $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
-
-    //======= JUST TESTING
-    //$data['email'] = "xxxxx@xxxx.xxx"; 
-    //$data['customer_id'] = null;
-
     // Extra Data in Options
-    // TODO CHANGE - Define that the "extra data" comes in an array called "form" from Frontend
+    // If the customer_id does not exist, the email must come in the request
     if(!isset($data['customer_id']) || empty($data['customer_id'])){
-      $options['email'] = $data['email'];
+      $options['email'] = $data['email']; // From Request
       // Save all
       $reservationData['options'] = $options;
     }
-   
+
+    //\Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
+    $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
+
     // Create Reservation and ReservationItem
     $reservation = $reservationRepository->create($reservationData);
 
@@ -99,6 +102,7 @@ class ReservationService
           $resource = app("Modules\Ibooking\Repositories\ResourceRepository")->find($item['resource_id']);
           $reservationItem['resource_id'] = $resource->id;
           $reservationItem['resource_title'] = $resource->title;
+          $reservationItem['organization_id'] = $resource->organization_id ?? null;
       }
 
       if (isset($item['category_id'])) {

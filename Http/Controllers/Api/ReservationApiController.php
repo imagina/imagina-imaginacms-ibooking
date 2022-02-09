@@ -37,7 +37,7 @@ class ReservationApiController extends BaseCrudController
     try {
       //Get model data
       $modelData = $request->input('attributes') ?? [];
-
+      $params = $this->getParamsRequest($request);
       //Validate Request
       if (isset($this->model->requestValidation['create'])) {
         $this->validateRequestApi(new $this->model->requestValidation['create']($modelData));
@@ -45,25 +45,26 @@ class ReservationApiController extends BaseCrudController
 
       //\Log::info("Ibooking: ReservationApiController|Create|ModelDataRequest: ".json_encode($modelData));
 
+      $reservation = $this->reservationService->createReservation($modelData);
+
       /*
       ****Process with payment****
       * 1. Create Checkout Cart
       * 2. Create Order
       * 3. User Pays the order (Event - OrderWasProcessed)
       * 4. Event - ProcessReservationOrder: 
-      *     - Create Reservation
-              - Create Reservation Item - (Trait WithMeeting)
-              - Create Meeting
-              - Create Notification
+      *     - Update Reservation
+            - Create Meeting
+            - Create Notification
       */
       if(is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment',null, false)){
 
-        $checkoutCart = $this->reservationService->createCheckoutCart($modelData['items']);
-
+        $checkoutCart = $this->reservationService->createCheckoutCart($modelData['items'],$reservation);
+       
+        $response = ["data" => ["redirectTo" => url(trans("icommerce::routes.store.checkout.create"))]];
       }else{
 
-        $reservation = $this->reservationService->createReservation($modelData);
-
+        $response = ["data" => ["redirectTo" => url("/ipanel/#/booking/reservations/index")]];
       }
 
 
