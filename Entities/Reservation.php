@@ -6,12 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-//use Modules\Ibooking\Traits\ReservationWithItemMeeting;
+use Modules\Ibooking\Entities\Status;
 
 class Reservation extends CrudModel
 {
-
-  //use ReservationWithItemMeeting;
 
   use BelongsToTenant;
 
@@ -35,7 +33,8 @@ class Reservation extends CrudModel
     'options'
   ];
 
-  
+  //============== RELATIONS ==============//
+
   public function items()
   {
     return $this->hasMany(ReservationItem::class);
@@ -48,6 +47,8 @@ class Reservation extends CrudModel
     return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
   }
 
+  //============== MUTATORS / ACCESORS ==============//
+
   public function setOptionsAttribute($value)
   {
     $this->attributes['options'] = json_encode($value);
@@ -57,5 +58,14 @@ class Reservation extends CrudModel
   {
     return json_decode($value);
   }
+
+  public function getStatusNameAttribute()
+  {
+    
+    $status = new Status();
+    return $status->get($this->status);
+
+  }
+
 
 }

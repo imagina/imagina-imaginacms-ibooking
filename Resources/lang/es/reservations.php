@@ -25,4 +25,11 @@ return [
     ],
     'validation' => [
     ],
+
+    'status' => [
+        'pending' => 'Pendiente',
+        'approved' => 'Aprobada',
+        'canceled' => 'Cancelada'
+    ],
+
 ];
