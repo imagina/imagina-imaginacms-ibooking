@@ -13,6 +13,7 @@ return [
       "reservationWithPayment" => "Crear Reservacion con pago (Proceso de Checkout)",
       'usersToNotify' => 'Usuarios para enviar notificaciones',
       'emails' => 'Emails para enviar notificaciones',
+      'reservationStatusDefault' => 'Estado de la Reserva por defecto'
   ],
 
   'settingHints' => [

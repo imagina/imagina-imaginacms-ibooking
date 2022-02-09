@@ -13,6 +13,7 @@ return [
       "reservationWithPayment" => "Create Reservation with payment (Checkout Process)",
       'usersToNotify' => 'Users to Notify',
       'emails' => 'Webmaster Email',
+      'reservationStatusDefault' => 'Reservation Status by Default'
   ],
 
   'settingHints' => [
