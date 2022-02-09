@@ -26,10 +26,20 @@ trait WithMeeting
 		    //Listen event after create model
 		    static::created(function ($model) {
 
-		    	\Log::info('Ibooking: Traits|WithMeeting|BootWithMeeting|WithMeeting: '.$model->service->with_meeting);
+		    	\Log::info('Ibooking: Traits|WithMeeting|Created|WithMeeting: '.$model->service->with_meeting);
 
-		    	// Validate Service With Meeting
-		     	if(isset($model->service) && $model->service->with_meeting)
+		    	// Validate Service With Meeting, Only Reservation Approved
+		     	if(isset($model->service) && $model->service->with_meeting && $model->status==1)
+		      		$model->createMeeting($model);
+
+		    });
+
+		    static::updated(function ($model) {
+
+		    	\Log::info('Ibooking: Traits|WithMeeting|Updated|WihtMeeting: '.$model->service->with_meeting);
+
+		    	// Validate Service With Meeting, Only Reservation Approved
+		     	if(isset($model->service) && $model->service->with_meeting && $model->status==1)
 		      		$model->createMeeting($model);
 
 		    });
