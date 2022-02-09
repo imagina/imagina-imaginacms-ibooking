@@ -83,7 +83,7 @@ class SendReservation
       $push = [
         "title" => trans("ibooking::reservations.title.confirmation reservation"),
         "message" => $subject,
-        "link" => url('/'),
+        "link" => url('/ipanel/#/booking/reservations/index'),
         "content" => "ibooking::emails.reservation",
         "view" => "ibooking::emails.Reservation",
         "frontEvent" => [
