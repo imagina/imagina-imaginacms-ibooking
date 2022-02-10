@@ -2,14 +2,17 @@
 
 namespace Modules\Ibooking\Events\Handlers;
 
+use Modules\Ibooking\Repositories\ReservationRepository;
+use Modules\Ibooking\Events\ReservationWasCreated;
+
 class ProcessReservationOrder
 {
 
-    private $logtitle;
+    public $reservationRepository;
 
-    public function __construct()
+    public function __construct(ReservationRepository $reservationRepository)
     {
-        $this->logtitle = '[IBOOKING-RESERVATION]::';
+      $this->reservationRepository = $reservationRepository; 
     }
 
     public function handle($event)
@@ -21,24 +24,21 @@ class ProcessReservationOrder
         //Order is Proccesed
         if($order->status_id==13){
 
-            // Get Customer Id from Order
-            $reservationData = ['customer_id' => $order->customer_id,'items' => []];
-
-            \Log::info('Ibooking: Events|Handlers|ProcessReservationOrder|ReservationData: '.json_encode($reservationData));
-
+            // Get Reservation Id From option in Order Item
+            $reservationId = null;
             foreach($order->orderItems as $item){
-                // Reservation Data
-                $reservationData['items'][] = (array)$item->options->reservationItemData;
+                $reservationId = $item->options->reservationId;
+                break;
+            }
 
-                $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
+            // Update Status Reservation
+            $reservation = $this->reservationRepository->updateBy($reservationId, [
+              "status" => 1 //Approved
+            ],null);
 
-                // Create Reservation and ReservationItem
-                $reservationRepository->create($reservationData);
-
-                // Log
-                $user = $order->customer;
-                \Log::info("{$this->logtitle}Order Completed | Register reservation to user ID {$user->id}");
-
+            // Check and create meeting for each item
+            foreach ($reservation->items as $key => $item) {
+               $item->createMeeting($item);
             }
 
         }// end If

@@ -25,23 +25,11 @@ trait WithMeeting
         if(is_module_enabled('Imeeting')){
 		    //Listen event after create model
 		    static::created(function ($model) {
-
-		    	\Log::info('Ibooking: Traits|WithMeeting|Created|WithMeeting: '.$model->service->with_meeting);
-
-		    	// Validate Service With Meeting, Only Reservation Approved
-		     	if(isset($model->service) && $model->service->with_meeting && $model->status==1)
-		      		$model->createMeeting($model);
-
+		      	$model->createMeeting($model);
 		    });
 
 		    static::updated(function ($model) {
-
-		    	\Log::info('Ibooking: Traits|WithMeeting|Updated|WihtMeeting: '.$model->service->with_meeting);
-
-		    	// Validate Service With Meeting, Only Reservation Approved
-		     	if(isset($model->service) && $model->service->with_meeting && $model->status==1)
-		      		$model->createMeeting($model);
-
+		      	$model->createMeeting($model);
 		    });
 		}
 	    
@@ -53,35 +41,38 @@ trait WithMeeting
 	public function createMeeting($model)
 	{
 	   	
-	   	//\Log::info('Ibooking: Traits|WithMeeting|CreateMeeting');
+	   	\Log::info('Ibooking: Traits|WithMeeting|CreateMeeting|WihtMeeting: '.$model->service->with_meeting." ");
 
-	    // Data Metting
-		$dataToCreate['meetingAttr'] = [
-			'title' => trans('ibooking::common.meeting.title').$model->reservation->customer->email,
-			'startTime' => $model->start_date,
-			'email' => $model->resource->options->email //Host
-		];
+	   	// Validate Service With Meeting, Only Reservation Approved
+		if(isset($model->service) && $model->service->with_meeting && $model->reservation->status==1){
+		    // Data Metting
+			$dataToCreate['meetingAttr'] = [
+				'title' => trans('ibooking::common.meeting.title').$model->reservation->customer->email,
+				'startTime' => $model->start_date,
+				'email' => $model->resource->options->email //Host
+			];
 
-		// Entity
-		$dataToCreate['entityAttr'] =[
-			'id' => $model->id,
-			'type' => get_class($model),  
-		];
+			// Entity
+			$dataToCreate['entityAttr'] =[
+				'id' => $model->id,
+				'type' => get_class($model),  
+			];
 
-		//\Log::info('Ibooking: Traits|WithMeeting|CreateMeeting|DataToCreate: '.json_encode($dataToCreate));
+			//\Log::info('Ibooking: Traits|WithMeeting|CreateMeeting|DataToCreate: '.json_encode($dataToCreate));
 
-		// Create meeting with Provider
-		$meeting = app('Modules\Imeeting\Services\MeetingService')->create($dataToCreate);
+			// Create meeting with Provider
+			$meeting = app('Modules\Imeeting\Services\MeetingService')->create($dataToCreate);
 
-		if(isset($meeting['errors'])){
-		    throw new \Exception($meeting['errors'], 500);
-		}else{
+			if(isset($meeting['errors'])){
+			    throw new \Exception($meeting['errors'], 500);
+			}else{
 
-			$extraParams['broadcastTo'] = [$model->reservation->customer->id,$model->resource->created_by];
+				$extraParams['broadcastTo'] = [$model->reservation->customer->id,$model->resource->created_by];
 
-			// Send Email and Notification Iadmin
-    		event(new ReservationWasCreated($model->reservation,$extraParams));
+				// Send Email and Notification Iadmin
+	    		event(new ReservationWasCreated($model->reservation,$extraParams));
 
+			}
 		}
 
 	}
