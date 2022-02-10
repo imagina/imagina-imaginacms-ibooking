@@ -54,16 +54,8 @@ class ReservationService
     
     // Add Reservation Item for ItemS
     foreach ($data['items'] as $item) {
-      $reservationItemData = $this->createReservationItemData($item);
+      $reservationItemData = $this->createReservationItemData($item,$reservationData);
       $reservationData['items'][] = $reservationItemData['reservationItem'];
-    }
-
-    // Extra Data in Options
-    // If the customer_id does not exist, the email must come in the request
-    if(!isset($data['customer_id']) || empty($data['customer_id'])){
-      $options['email'] = $data['email']; // From Request
-      // Save all
-      $reservationData['options'] = $options;
     }
 
     //\Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
@@ -83,7 +75,7 @@ class ReservationService
   * Get data from each item and create one array with the information 
   * @return Array - [service,reservationItem]
   */
-  public function createReservationItemData($item){
+  public function createReservationItemData($item,$reservationData){
 
       $reservationItem = [];
       $response = [];
@@ -103,6 +95,10 @@ class ReservationService
           $reservationItem['resource_id'] = $resource->id;
           $reservationItem['resource_title'] = $resource->title;
           $reservationItem['organization_id'] = $resource->organization_id ?? null;
+
+          //OJO CAMBIO A REVISAR
+          $reservationItem['entity_type'] = "Modules\Ibooking\Entities\Resource";
+          $reservationItem['entity_id'] = $resource->id;
       }
 
       if (isset($item['category_id'])) {
@@ -115,6 +111,18 @@ class ReservationService
 
       if (isset($item['end_date'])) $reservationItem['end_date'] = $item['end_date'];
 
+
+      /*
+      * OJO: Esto hay que revisarlo mejor xq la idea era que la Reservacion
+      * agrupara todo, pero a nivel de frontend se dificulta
+      */
+      if (isset($reservationData['customer_id']))
+        $reservationItem['customer_id'] = $reservationData['customer_id'];
+
+      if (isset($reservationData['status']))
+        $reservationItem['status'] = $reservationData['status'];
+
+      // Save reservation item data
       $response['reservationItem'] = $reservationItem;
 
       return $response;
