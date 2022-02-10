@@ -59,7 +59,7 @@ class ReservationApiController extends BaseCrudController
       */
       if(is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment',null, false)){
 
-        $checkoutCart = $this->reservationService->createCheckoutCart($modelData['items'],$reservation);
+        $checkoutCart = $this->reservationService->createCheckoutCart($modelData,$reservation);
        
         $response = ["data" => ["redirectTo" => url(trans("icommerce::routes.store.checkout.create"))]];
       }else{

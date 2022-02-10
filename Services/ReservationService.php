@@ -14,15 +14,16 @@ class ReservationService
   /**
   * @return cart service created
   */
-  public function createCheckoutCart($items,$reservation=null){
+  public function createCheckoutCart($data,$reservation=null){
   
     $cartService = app("Modules\Icommerce\Services\CartService");
     $products = [];
+    $items = $data['items'];
 
     // Add Reservation Item for ItemS
     foreach ($items as $item) {
         
-        $reservationItemData = $this->createReservationItemData($item);
+        $reservationItemData = $this->createReservationItemData($item,$data);
 
         // Set Products to Cart
         $products[] = [
