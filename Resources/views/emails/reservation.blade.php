@@ -53,8 +53,14 @@
 			 		<td>{{date(config('asgard.ibooking.config.hourFormat'), strtotime($item->end_date))}}</td>
 		 		</tr>
 		 	@endif
-
+		 	
 		@endforeach
+		
+		<tr>
+			<td>{{trans('ibooking::common.table.status')}}:</td>
+			<td>{{$reservation->statusName}}</td>
+		</tr>
+
 	</div>
 
 </div>

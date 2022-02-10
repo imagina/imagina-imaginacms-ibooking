@@ -6,6 +6,7 @@ return [
     "price" => "Precio",
     "start date" => "Fecha de Inicio",
     "end date" => "Fecha de Fin",
+    "status" => "Estado",
   ],
  
   "settings" => [
