@@ -32,14 +32,12 @@ class ProcessReservationOrder
             }
 
             // Update Status Reservation
+            // With the trait WithItems update Item Status
+            // With the trait WithMeeting create de meeting to the Item
             $reservation = $this->reservationRepository->updateBy($reservationId, [
               "status" => 1 //Approved
             ],null);
 
-            // Check and create meeting for each item
-            foreach ($reservation->items as $key => $item) {
-               $item->createMeeting($item);
-            }
 
         }// end If
 

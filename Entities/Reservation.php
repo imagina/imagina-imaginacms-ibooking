@@ -8,10 +8,13 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 use Modules\Ibooking\Entities\Status;
 
+use Modules\Ibooking\Traits\WithItems;
+
 class Reservation extends CrudModel
 {
 
-  use BelongsToTenant;
+  use WithItems; // Event to update status itemsssss
+  //use BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationTransformer';
   public $requestValidation = [
