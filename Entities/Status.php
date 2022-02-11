@@ -7,7 +7,7 @@ class Status
 {
     const PENDING = 0;
     const APPROVED = 1;
-    const CANCELED = 3;
+    const CANCELED = 2;
     
     private $statuses = [];
     private $statuses2 = [];
