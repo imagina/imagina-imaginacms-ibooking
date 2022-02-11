@@ -51,10 +51,16 @@ class AvailabilityApiController extends BaseCrudController
         $q->where('ibooking__service_resource.service_id', $service->id);
       })->get();
 
+
+    $filterDate = isset($params->date) ? $params->date : date('Y-m-d');
+
     // To Each Resource
     foreach ($resources as $resource) {
       // Get Reservation Items from Resource
-      $reservationItems = ReservationItem::where('resource_id', $resource->id)->get();
+      $reservationItems = ReservationItem::where('resource_id', $resource->id)
+      ->where("status","=",0)//Pending
+      ->orWhere("status","=",1)//Approved
+      ->get();
 
       // Get busy shifts
       $busyShifts = [];
@@ -71,7 +77,7 @@ class AvailabilityApiController extends BaseCrudController
       $shifts = $resource->schedule->getShifts([
         'shiftTime' => $service->shift_time ?? 30,
         'dateRange' => isset($params->date) ? [$params->date] : [],
-        'timeRange' => isset($params->time) ? [$params->time] : [],
+        'timeRange' => isset($params->time) && !is_null($params->time) ? $params->time : [],
         'busyShifts' => $busyShifts
       ]);
 
