@@ -9,6 +9,8 @@ use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Ibooking\Listeners\RegisterIbookingSidebar;
 
+use Modules\Ibooking\Console\CheckStatusReservations;
+
 class IbookingServiceProvider extends ServiceProvider
 {
     use CanPublishConfiguration;
@@ -33,7 +35,7 @@ class IbookingServiceProvider extends ServiceProvider
             // append translations
         });
 
-
+        $this->registerCommands();
     }
 
     public function boot()
@@ -57,6 +59,22 @@ class IbookingServiceProvider extends ServiceProvider
     public function provides()
     {
         return array();
+    }
+
+    /**
+   * Register all commands for this module
+   */
+    private function registerCommands()
+    {
+        $this->registerCheckStatusReservationsCommand();
+    }
+
+
+    private function registerCheckStatusReservationsCommand()
+    {
+    
+        $this->app['command.ibooking.check-status-reservations'] = $this->app->make(CheckStatusReservations::class);;
+        $this->commands(['command.ibooking.check-status-reservations']);
     }
 
     private function registerBindings()
