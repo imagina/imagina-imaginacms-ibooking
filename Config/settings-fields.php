@@ -70,6 +70,17 @@ return [
         'options' => (new Modules\Ibooking\Entities\Status)->convertToSettings()
       ],
   ],
+
+  'waitingTimeToCancelReservation' => [
+    'name' => 'ibooking::waitingTimeToCancelReservation',
+    'value' => 10,
+    'type' => 'input',
+    'columns' => 'col-12 col-md-6',
+    'props' => [
+      'label' => 'ibooking::common.settings.waitingTimeToCancelReservation',
+      'type' => 'number'
+    ],
+  ],
   
   
   //Time Range Filter to math resource availability

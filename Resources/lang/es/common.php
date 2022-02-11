@@ -14,7 +14,8 @@ return [
       "reservationWithPayment" => "Crear Reservacion con pago (Proceso de Checkout)",
       'usersToNotify' => 'Usuarios para enviar notificaciones',
       'emails' => 'Emails para enviar notificaciones',
-      'reservationStatusDefault' => 'Estado de la Reserva por defecto'
+      'reservationStatusDefault' => 'Estado de la Reserva por defecto (Al Crearse)',
+      "waitingTimeToCancelReservation" => "Tiempo de espera (En Minutos) para cancelar una reservación",
   ],
 
   'settingHints' => [
