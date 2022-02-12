@@ -8,10 +8,11 @@ use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Ibooking\Traits\WithMeeting;
 
 use Modules\Ibooking\Entities\Status;
+use Modules\Ifillable\Traits\isFillable;
 
 class ReservationItem extends CrudModel
 {
-  use WithMeeting;
+  use WithMeeting, isFillable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
   public $requestValidation = [
@@ -73,7 +74,7 @@ class ReservationItem extends CrudModel
 
   public function getStatusNameAttribute()
   {
-    
+
     $status = new Status();
     return $status->get($this->status);
 

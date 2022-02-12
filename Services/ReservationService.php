@@ -8,21 +8,21 @@ use Modules\Ibooking\Events\ReservationWasCreated;
 
 class ReservationService
 {
-  
- 
-  
+
+
+
   /**
   * @return cart service created
   */
   public function createCheckoutCart($data,$reservation=null){
-  
+
     $cartService = app("Modules\Icommerce\Services\CartService");
     $products = [];
     $items = $data['items'];
 
     // Add Reservation Item for ItemS
     foreach ($items as $item) {
-        
+
         $reservationItemData = $this->createReservationItemData($item,$data);
 
         // Set Products to Cart
@@ -31,7 +31,7 @@ class ReservationService
           "quantity" => 1,
           "options" => ['reservationId'=>$reservation->id,'reservationItemData' => $reservationItemData['reservationItem']]
         ];
-   
+
         //\Log::info("Ibooking: Services|CheckoutService|Create: ".json_encode($products));
       }
 
@@ -52,18 +52,22 @@ class ReservationService
 
     // If no exist is 0 (Pending)
     $reservationData['status'] = (int)setting('ibooking::reservationStatusDefault',null,0);
-    
-    // Add Reservation Item for ItemS
-    foreach ($data['items'] as $item) {
-      $reservationItemData = $this->createReservationItemData($item,$reservationData);
-      $reservationData['items'][] = $reservationItemData['reservationItem'];
-    }
+
 
     //\Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
     $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
     // Create Reservation and ReservationItem
     $reservation = $reservationRepository->create($reservationData);
+
+
+    $reservationItemRepository = app('Modules\Ibooking\Repositories\ReservationItemRepository');
+    // Add Reservation Item for ItemS
+    foreach ($data['items'] as $item) {
+      $reservationItemData = $this->createReservationItemData($item,$reservationData);
+      $reservationItemData['reservationItem']['reservation_id'] = $reservation->id;
+      $reservationItemRepository->create($reservationItemData['reservationItem']);
+    }
 
     // Send Email and Notification Iadmin
     event(new ReservationWasCreated($reservation));
@@ -73,7 +77,7 @@ class ReservationService
   }
 
   /**
-  * Get data from each item and create one array with the information 
+  * Get data from each item and create one array with the information
   * @return Array - [service,reservationItem]
   */
   public function createReservationItemData($item,$reservationData){
@@ -124,13 +128,14 @@ class ReservationService
         $reservationItem['status'] = $reservationData['status'];
 
       // Save reservation item data
-      $response['reservationItem'] = $reservationItem;
+      // TODO: Revisar por que no estaba dejando todos los datos del item
+      $response['reservationItem'] = array_merge($item, $reservationItem);
 
       return $response;
 
   }
-  
-  
-  
-  
+
+
+
+
 }
