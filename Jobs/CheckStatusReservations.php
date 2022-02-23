@@ -32,7 +32,7 @@ class CheckStatusReservations implements ShouldQueue
     public function handle()
     {
        
-        Log::info("Ibooking: Jobs|CheckStatusReservation");
+        \Log::info("Ibooking: Jobs|CheckStatusReservation");
 
         $nowDateComplete = date('Y-m-d H:i:s');
         $nowDate = date('Y-m-d');
