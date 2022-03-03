@@ -25,7 +25,7 @@ $router->group(['prefix' => '/ibooking/v1'], function (Router $router) {
     'module' => 'ibooking',
     'prefix' => 'reservations',
     'controller' => 'ReservationApiController',
-    'middleware' => ['create' => []] // Just Testing
+    'middleware' => ['create' => ['optional-auth']] // Just Testing
   ]);
   $router->apiCrud([
     'module' => 'ibooking',

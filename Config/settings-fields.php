@@ -1,28 +1,6 @@
 <?php
 
 return [
-
-  'reservationWithPayment' => [
-    'value' =>  "0",
-    'name' => 'ibooking::reservationWithPayment',
-    'type' => 'checkbox',
-    'props' => [
-      'label' => 'ibooking::common.settings.reservationWithPayment',
-      'trueValue' => "1",
-      'falseValue' => "0",
-    ]
-  ],
-  'createExternalMeeting' => [
-    'value' =>  "0",
-    'name' => 'ibooking::createExternalMeeting',
-    'type' => 'checkbox',
-    'props' => [
-      'label' => 'ibooking::common.settings.createExternalMeeting',
-      'trueValue' => "1",
-      'falseValue' => "0",
-    ]
-  ],
-
   'usersToNotify' => [
     'name' => 'ibooking::usersToNotify',
     'value' => [],
@@ -54,7 +32,7 @@ return [
       'label' => 'ibooking::common.settings.emails'
     ],
   ],
-  
+
   'reservationStatusDefault' => [
       'value' => '0',// Pending
       'name' => 'ibooking::reservationStatusDefault',
@@ -81,8 +59,8 @@ return [
       'type' => 'number'
     ],
   ],
-  
-  
+
+
   //Time Range Filter to math resource availability
   'timeRangeFilter' => [
     'name' => 'ibooking::timeRangeFilter',
@@ -118,7 +96,7 @@ return [
           'label' => 'ibooking::settings.settingFields.endTime1'
         ]
       ],
-  
+
       //Afternoon shift
       'label2' => [
         'name' => 'label2',
@@ -147,7 +125,7 @@ return [
           'label' => 'ibooking::settings.settingFields.endTime2'
         ]
       ],
-  
+
       //first extra shift
       'label3' => [
         'name' => 'label3',
@@ -177,8 +155,39 @@ return [
         ]
       ],
     ],
-  
-    
+
+
   ],
-  
+
+  'reservationWithPayment' => [
+    'value' =>  "0",
+    'name' => 'ibooking::reservationWithPayment',
+    'type' => 'checkbox',
+    'props' => [
+      'label' => 'ibooking::common.settings.reservationWithPayment',
+      'trueValue' => "1",
+      'falseValue' => "0",
+    ]
+  ],
+  'createExternalMeeting' => [
+    'value' =>  "0",
+    'name' => 'ibooking::createExternalMeeting',
+    'type' => 'checkbox',
+    'props' => [
+      'label' => 'ibooking::common.settings.createExternalMeeting',
+      'trueValue' => "1",
+      'falseValue' => "0",
+    ]
+  ],
+  'allowPublicReservation' => [
+    'name' => 'ibooking::allowPublicReservation',
+    'value' => 1,
+    'type' => 'checkbox',
+    'columns' => 'col-12 col-md-6',
+    'props' => [
+      'label' => 'ibooking::common.settings.allowPublicReservation',
+      'trueValue' => "1",
+      'falseValue' => "0",
+    ],
+  ],
 ];
