@@ -35,6 +35,15 @@ class Resource extends CrudModel
     'services' => 'belongsToMany',
   ];
 
+  public $dispatchesEventsWithBindings = [
+    'created' => [
+      [
+        'path' => 'Modules\Igamification\Events\ActivityWasCompleted',
+        'extraData' => ['systemNameActivity' => 'availability-organize']
+      ]
+    ]
+  ];
+
   /**
    * Relation many to many with services
    * @return mixed
