@@ -7,7 +7,7 @@ return [
     "adminServices" => "Servicios",
     "adminResources" => "Recursos",
     "adminReservations" => "Reservaciones",
-    "panelUserResource" => "Mi Recurso",
+    "panelUserResource" => "Disponibilidad",
     "panelReservations" => "Agenda",
     "panelNewReservation" => "Nueva Reservación",
     "panelUpdateReservation" => "Actualizar Reservación"
