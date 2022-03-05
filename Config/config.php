@@ -32,7 +32,19 @@ return [
         'title' => 'ibooking::activities.availability-organize.title',
         'status' => 1,
         'url' => 'ipanel/#/booking/resource/user/'
-      ]
+      ],
+      [
+        'system_name' => 'availability-reservations',
+        'title' => 'ibooking::activities.availability-reservations.title',
+        'status' => 1,
+        'url' => 'ipanel/#/booking/reservations/index'
+      ],
+      [
+        'system_name' => 'availability-new-reservation',
+        'title' => 'ibooking::activities.availability-new-reservation.title',
+        'status' => 1,
+        'url' => 'ipanel/#/booking/reservations/create'
+      ],
   ]
 
 ];
