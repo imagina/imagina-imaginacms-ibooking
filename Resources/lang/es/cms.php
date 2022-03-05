@@ -42,6 +42,7 @@ return [
       "pending" => "Falta poco! Revisa tu correo y acepta la vinculación para tu cuenta de Zoom...",
       "success" => "Todo está listo! Nosotros nos encargamos de crear las reuniones en Zoom por ti..."
     ]
-  ]
+  ],
+  "helpShareUserResource" => "Puedes copiar los link de tus servicios y/o de tu recurso para compartirlos de una forma más facil"
 ];
 

@@ -42,6 +42,7 @@ return [
       "pending" => "Almost there! Check your email and accept the link for your Zoom account ...",
       "success" => "Everything is ready! We take care of creating Zoom meetings for you ..."
     ]
-  ]
+  ],
+  "helpShareUserResource" => "You can copy the links of your services and/or your resource to share them in an easier way"
 ];
 
