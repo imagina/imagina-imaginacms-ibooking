@@ -27,16 +27,19 @@ class ProcessReservationOrder
             // Get Reservation Id From option in Order Item
             $reservationId = null;
             foreach($order->orderItems as $item){
-                $reservationId = $item->options->reservationId;
+                if(isset($item->options->reservationId))
+                    $reservationId = $item->options->reservationId;
                 break;
             }
 
             // Update Status Reservation
             // With the trait WithItems update Item Status
             // With the trait WithMeeting create de meeting to the Item
-            $reservation = $this->reservationRepository->updateBy($reservationId, [
-              "status" => 1 //Approved
-            ],null);
+            if(!is_null($reservationId)){
+                $reservation = $this->reservationRepository->updateBy($reservationId, [
+                "status" => 1 //Approved
+                ],null);
+            }
 
 
         }// end If
