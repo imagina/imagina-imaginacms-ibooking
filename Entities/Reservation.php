@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-//use Modules\Ibooking\Traits\ReservationWithItemMeeting;
+use Modules\Ibooking\Entities\Status;
+
+use Modules\Ibooking\Traits\WithItems;
 
 class Reservation extends CrudModel
 {
 
-  //use ReservationWithItemMeeting;
-
-  use BelongsToTenant;
+  use WithItems; // Event to update status itemsssss
+  //use BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationTransformer';
   public $requestValidation = [
@@ -35,6 +36,7 @@ class Reservation extends CrudModel
     'options'
   ];
 
+  //============== RELATIONS ==============//
   
   public function items()
   {
@@ -48,6 +50,8 @@ class Reservation extends CrudModel
     return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
   }
 
+  //============== MUTATORS / ACCESORS ==============//
+
   public function setOptionsAttribute($value)
   {
     $this->attributes['options'] = json_encode($value);
@@ -57,5 +61,14 @@ class Reservation extends CrudModel
   {
     return json_decode($value);
   }
+
+  public function getStatusNameAttribute()
+  {
+    
+    $status = new Status();
+    return $status->get($this->status);
+
+  }
+
 
 }

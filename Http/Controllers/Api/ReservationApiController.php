@@ -37,7 +37,7 @@ class ReservationApiController extends BaseCrudController
     try {
       //Get model data
       $modelData = $request->input('attributes') ?? [];
-
+      $params = $this->getParamsRequest($request);
       //Validate Request
       if (isset($this->model->requestValidation['create'])) {
         $this->validateRequestApi(new $this->model->requestValidation['create']($modelData));
@@ -59,11 +59,12 @@ class ReservationApiController extends BaseCrudController
       if(is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment',null, false)){
 
         $checkoutCart = $this->reservationService->createCheckoutCart($modelData['items']);
-
+       
+        $response = ["data" => ["redirectTo" => url(trans("icommerce::routes.store.checkout.create"))]];
       }else{
 
         $reservation = $this->reservationService->createReservation($modelData);
-
+        $response = ["data" => ["redirectTo" => url("/#/booking/reservation/index")]];
       }
 
 

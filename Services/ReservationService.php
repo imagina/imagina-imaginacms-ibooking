@@ -30,12 +30,12 @@ class ReservationService
           "quantity" => 1,
           "options" => ['reservationItemData' => $reservationItemData['reservationItem']]
         ];
-
+   
         //\Log::info("Ibooking: Services|CheckoutService|Create: ".json_encode($products));
       }
 
       // Create the Cart
-      $cartService->create(["products" => $products]);
+      $cart = $cartService->create(["products" => $products]);
 
       return $cartService;
   }
@@ -45,6 +45,11 @@ class ReservationService
   */
   public function createReservation($data){
 
+    \Log::info("Ibooking: Services|ReservationService|Create: ".json_encode($data));
+
+    // Get Customer Id
+    if(isset($data['customer_id']))
+      $reservationData = ['customer_id' => $data['customer_id'],'items' => []];
 
     // Add Reservation Item for ItemS
     foreach ($data['items'] as $item) {
@@ -55,7 +60,7 @@ class ReservationService
     $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
     //======= JUST TESTING
-    //$data['email'] = "xxxxx@xxxx.xxx"; 
+    //$data['email'] = "xxxxxx@xxxx.xxx";
     //$data['customer_id'] = null;
 
     // Extra Data in Options
@@ -65,6 +70,8 @@ class ReservationService
       // Save all
       $reservationData['options'] = $options;
     }
+   
+    \Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
    
     // Create Reservation and ReservationItem
     $reservation = $reservationRepository->create($reservationData);
@@ -99,6 +106,7 @@ class ReservationService
           $resource = app("Modules\Ibooking\Repositories\ResourceRepository")->find($item['resource_id']);
           $reservationItem['resource_id'] = $resource->id;
           $reservationItem['resource_title'] = $resource->title;
+          $reservationItem['organization_id'] = $resource->organization_id ?? null;
       }
 
       if (isset($item['category_id'])) {

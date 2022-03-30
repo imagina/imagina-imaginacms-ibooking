@@ -24,7 +24,15 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
   	public function filterQuery($query, $filter)
   	{
     
-    /**
+      // if has permission index-all
+      /*
+      $indexAllPermission = $params->permissions['ibooking.reservations.index-all'] ?? false; // show orders of others
+    
+      if(!$indexAllPermission){
+        $query->where('customer_id', $params->user->id);
+      }
+    */
+      /**
      * Note: Add filter name to replaceFilters attribute to replace it
      *
      * Example filter Query

@@ -7,25 +7,25 @@ $router->group(['prefix' => '/ibooking/v1'], function (Router $router) {
     'module' => 'ibooking',
     'prefix' => 'categories',
     'controller' => 'CategoryApiController',
-    //'middleware' =>  ['create' => [],'update' => [],'delete' => [],'restore' => []] // Just Testing
+    'middleware' => ['index' => []] // Just Testing
   ]);
   $router->apiCrud([
     'module' => 'ibooking',
     'prefix' => 'services',
     'controller' => 'ServiceApiController',
-    //'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
+    'middleware' => ['index' => []] // Just Testing
   ]);
   $router->apiCrud([
     'module' => 'ibooking',
     'prefix' => 'resources',
     'controller' => 'ResourceApiController',
-    //'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
+    'middleware' => ['index' => [], 'show' => []] // Just Testing
   ]);
   $router->apiCrud([
     'module' => 'ibooking',
     'prefix' => 'reservations',
     'controller' => 'ReservationApiController',
-    //'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
+    'middleware' => ['create' => ['optional-auth']] // Just Testing
   ]);
   $router->apiCrud([
     'module' => 'ibooking',
@@ -37,7 +37,7 @@ $router->group(['prefix' => '/ibooking/v1'], function (Router $router) {
     'as' => 'api.ibooking.availability',
     'uses' => 'AvailabilityApiController@availability',
   ]);
-
+  
 
 // append
 

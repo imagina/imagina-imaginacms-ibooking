@@ -27,6 +27,7 @@ return [
     ],
     'ibooking.reservations' => [
         'index' => 'ibooking::reservations.list resource',
+        'index-all' => 'ibooking::reservations.list-all resource',
         'create' => 'ibooking::reservations.create resource',
         'edit' => 'ibooking::reservations.edit resource',
         'destroy' => 'ibooking::reservations.destroy resource',
