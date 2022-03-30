@@ -32,7 +32,7 @@ return [
       'label' => 'ibooking::common.settings.emails'
     ],
   ],
-  
+
   'reservationStatusDefault' => [
       'value' => '0',// Pending
       'name' => 'ibooking::reservationStatusDefault',
@@ -59,8 +59,8 @@ return [
       'type' => 'number'
     ],
   ],
-  
-  
+
+
   //Time Range Filter to math resource availability
   'timeRangeFilter' => [
     'name' => 'ibooking::timeRangeFilter',
@@ -96,7 +96,7 @@ return [
           'label' => 'ibooking::settings.settingFields.endTime1'
         ]
       ],
-  
+
       //Afternoon shift
       'label2' => [
         'name' => 'label2',
@@ -125,7 +125,7 @@ return [
           'label' => 'ibooking::settings.settingFields.endTime2'
         ]
       ],
-  
+
       //first extra shift
       'label3' => [
         'name' => 'label3',
@@ -155,10 +155,10 @@ return [
         ]
       ],
     ],
-  
-    
+
+
   ],
-  
+
   'reservationWithPayment' => [
     'value' =>  "0",
     'name' => 'ibooking::reservationWithPayment',

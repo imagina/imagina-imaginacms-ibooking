@@ -55,26 +55,10 @@ class SendReservation
         }
       }
 
-
-      // Testing
-      /*
-      $reservationItem = $reservation->items->first();
-      \Log::info("Ibooking: Events|Handler|SendReservation|ReservationItem: ".json_encode($reservationItem));
-      if(isset($reservationItem->service) && !is_null($reservationItem->service)){
-        if(isset($reservationItem->service->form)){
-
-        }
-      }
-      */
-
-      // Get Email Reservation
-      if(empty($reservation->customer_id)){
-        $emailReservation = $reservation->options->email;
-      }else{
+      if(!empty($reservation->customer_id)){
         $emailReservation = $reservation->customer->email;
+        array_push($emailTo, $emailReservation);
       }
-      array_push($emailTo, $emailReservation);
-
       
       // Data Notification
       $to["email"] = $emailTo;

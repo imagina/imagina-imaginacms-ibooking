@@ -7,9 +7,12 @@ use Modules\Core\Icrud\Entities\CrudModel;
 
 use Modules\Ibooking\Traits\WithMeeting;
 
+use Modules\Ibooking\Entities\Status;
+use Modules\Ifillable\Traits\isFillable;
+
 class ReservationItem extends CrudModel
 {
-  use WithMeeting;
+  use WithMeeting, isFillable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
   public $requestValidation = [
@@ -36,8 +39,14 @@ class ReservationItem extends CrudModel
     'resource_title',
     'price',
     'start_date',
-    'end_date'
+    'end_date',
+    'customer_id',
+    'entity_type',
+    'entity_id',
+    'status'
   ];
+
+//============== RELATIONS ==============//
 
   public function reservation()
   {
@@ -53,4 +62,22 @@ class ReservationItem extends CrudModel
   {
     return $this->belongsTo(Resource::class);
   }
+
+  public function customer()
+  {
+    $driver = config('asgard.user.config.driver');
+
+    return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
+  }
+
+  //============== MUTATORS / ACCESORS ==============//
+
+  public function getStatusNameAttribute()
+  {
+
+    $status = new Status();
+    return $status->get($this->status);
+
+  }
+
 }

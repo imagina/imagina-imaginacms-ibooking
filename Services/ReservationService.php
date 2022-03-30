@@ -8,27 +8,28 @@ use Modules\Ibooking\Events\ReservationWasCreated;
 
 class ReservationService
 {
-  
- 
-  
+
+
+
   /**
   * @return cart service created
   */
-  public function createCheckoutCart($items){
-  
+  public function createCheckoutCart($data,$reservation=null){
+
     $cartService = app("Modules\Icommerce\Services\CartService");
     $products = [];
+    $items = $data['items'];
 
     // Add Reservation Item for ItemS
     foreach ($items as $item) {
-        
-        $reservationItemData = $this->createReservationItemData($item);
+
+        $reservationItemData = $this->createReservationItemData($item,$data);
 
         // Set Products to Cart
         $products[] = [
           "id" => $reservationItemData['service']->product->id, // OJO - getProductAttribute - Version que ya estaba
           "quantity" => 1,
-          "options" => ['reservationItemData' => $reservationItemData['reservationItem']]
+          "options" => ['reservationId'=>$reservation->id,'reservationItemData' => $reservationItemData['reservationItem']]
         ];
    
         //\Log::info("Ibooking: Services|CheckoutService|Create: ".json_encode($products));
@@ -45,36 +46,28 @@ class ReservationService
   */
   public function createReservation($data){
 
-    \Log::info("Ibooking: Services|ReservationService|Create: ".json_encode($data));
-
-    // Get Customer Id
+    // Get Customer Id if exist
     if(isset($data['customer_id']))
       $reservationData = ['customer_id' => $data['customer_id'],'items' => []];
 
-    // Add Reservation Item for ItemS
-    foreach ($data['items'] as $item) {
-      $reservationItemData = $this->createReservationItemData($item);
-      $reservationData['items'][] = $reservationItemData['reservationItem'];
-    }
+    // If no exist is 0 (Pending)
+    $reservationData['status'] = (int)setting('ibooking::reservationStatusDefault',null,0);
 
+
+    //\Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
     $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
-    //======= JUST TESTING
-    //$data['email'] = "xxxxxx@xxxx.xxx";
-    //$data['customer_id'] = null;
-
-    // Extra Data in Options
-    // TODO CHANGE - Define that the "extra data" comes in an array called "form" from Frontend
-    if(!isset($data['customer_id']) || empty($data['customer_id'])){
-      $options['email'] = $data['email'];
-      // Save all
-      $reservationData['options'] = $options;
-    }
-   
-    \Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
-   
     // Create Reservation and ReservationItem
     $reservation = $reservationRepository->create($reservationData);
+
+
+    $reservationItemRepository = app('Modules\Ibooking\Repositories\ReservationItemRepository');
+    // Add Reservation Item for ItemS
+    foreach ($data['items'] as $item) {
+      $reservationItemData = $this->createReservationItemData($item,$reservationData);
+      $reservationItemData['reservationItem']['reservation_id'] = $reservation->id;
+      $reservationItemRepository->create($reservationItemData['reservationItem']);
+    }
 
     // Send Email and Notification Iadmin
     event(new ReservationWasCreated($reservation));
@@ -84,10 +77,10 @@ class ReservationService
   }
 
   /**
-  * Get data from each item and create one array with the information 
+  * Get data from each item and create one array with the information
   * @return Array - [service,reservationItem]
   */
-  public function createReservationItemData($item){
+  public function createReservationItemData($item,$reservationData){
 
       $reservationItem = [];
       $response = [];
@@ -107,6 +100,10 @@ class ReservationService
           $reservationItem['resource_id'] = $resource->id;
           $reservationItem['resource_title'] = $resource->title;
           $reservationItem['organization_id'] = $resource->organization_id ?? null;
+
+          //OJO CAMBIO A REVISAR
+          $reservationItem['entity_type'] = "Modules\Ibooking\Entities\Resource";
+          $reservationItem['entity_id'] = $resource->id;
       }
 
       if (isset($item['category_id'])) {
@@ -119,13 +116,26 @@ class ReservationService
 
       if (isset($item['end_date'])) $reservationItem['end_date'] = $item['end_date'];
 
-      $response['reservationItem'] = $reservationItem;
+
+      /*
+      * OJO: Esto hay que revisarlo mejor xq la idea era que la Reservacion
+      * agrupara todo, pero a nivel de frontend se dificulta
+      */
+      if (isset($reservationData['customer_id']))
+        $reservationItem['customer_id'] = $reservationData['customer_id'];
+
+      if (isset($reservationData['status']))
+        $reservationItem['status'] = $reservationData['status'];
+
+      // Save reservation item data
+      // TODO: Revisar por que no estaba dejando todos los datos del item
+      $response['reservationItem'] = array_merge($item, $reservationItem);
 
       return $response;
 
   }
-  
-  
-  
-  
+
+
+
+
 }

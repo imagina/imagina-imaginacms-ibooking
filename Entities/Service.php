@@ -13,11 +13,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Modules\Isite\Traits\WithProduct;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Iforms\Support\Traits\Formeable;
+use Modules\Ifillable\Traits\isFillable;
 
 class Service extends CrudModel
 {
 
-  use Translatable, WithProduct, MediaRelation, BelongsToTenant, Formeable;
+  use Translatable, WithProduct, MediaRelation, BelongsToTenant, Formeable, isFillable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
   public $requestValidation = [

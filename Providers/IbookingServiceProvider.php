@@ -9,6 +9,8 @@ use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Ibooking\Listeners\RegisterIbookingSidebar;
 
+use Modules\Ibooking\Console\CheckStatusReservations;
+
 class IbookingServiceProvider extends ServiceProvider
 {
     use CanPublishConfiguration;
@@ -33,18 +35,20 @@ class IbookingServiceProvider extends ServiceProvider
             // append translations
         });
 
-
+        $this->registerCommands();
     }
 
     public function boot()
     {
-        
+
         $this->publishConfig('ibooking', 'config');
         $this->publishConfig('ibooking', 'crud-fields');
 
         $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'settings'), "asgard.ibooking.settings");
         $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'settings-fields'), "asgard.ibooking.settings-fields");
         $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'permissions'), "asgard.ibooking.permissions");
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'cmsPages'), "asgard.ibooking.cmsPages");
+        $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'cmsSidebar'), "asgard.ibooking.cmsSidebar");
 
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
@@ -57,6 +61,22 @@ class IbookingServiceProvider extends ServiceProvider
     public function provides()
     {
         return array();
+    }
+
+    /**
+   * Register all commands for this module
+   */
+    private function registerCommands()
+    {
+        $this->registerCheckStatusReservationsCommand();
+    }
+
+
+    private function registerCheckStatusReservationsCommand()
+    {
+
+        $this->app['command.ibooking.check-status-reservations'] = $this->app->make(CheckStatusReservations::class);;
+        $this->commands(['command.ibooking.check-status-reservations']);
     }
 
     private function registerBindings()

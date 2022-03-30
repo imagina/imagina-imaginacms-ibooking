@@ -2,14 +2,17 @@
 
 namespace Modules\Ibooking\Events\Handlers;
 
+use Modules\Ibooking\Repositories\ReservationRepository;
+use Modules\Ibooking\Events\ReservationWasCreated;
+
 class ProcessReservationOrder
 {
 
-    private $logtitle;
+    public $reservationRepository;
 
-    public function __construct()
+    public function __construct(ReservationRepository $reservationRepository)
     {
-        $this->logtitle = '[IBOOKING-RESERVATION]::';
+      $this->reservationRepository = $reservationRepository; 
     }
 
     public function handle($event)
@@ -21,25 +24,23 @@ class ProcessReservationOrder
         //Order is Proccesed
         if($order->status_id==13){
 
-            // Get Customer Id from Order
-            $reservationData = ['customer_id' => $order->customer_id,'items' => []];
-
-            \Log::info('Ibooking: Events|Handlers|ProcessReservationOrder|ReservationData: '.json_encode($reservationData));
-
+            // Get Reservation Id From option in Order Item
+            $reservationId = null;
             foreach($order->orderItems as $item){
-                // Reservation Data
-                $reservationData['items'][] = (array)$item->options->reservationItemData;
-
-                $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
-
-                // Create Reservation and ReservationItem
-                $reservationRepository->create($reservationData);
-
-                // Log
-                $user = $order->customer;
-                \Log::info("{$this->logtitle}Order Completed | Register reservation to user ID {$user->id}");
-
+                if(isset($item->options->reservationId))
+                    $reservationId = $item->options->reservationId;
+                break;
             }
+
+            // Update Status Reservation
+            // With the trait WithItems update Item Status
+            // With the trait WithMeeting create de meeting to the Item
+            if(!is_null($reservationId)){
+                $reservation = $this->reservationRepository->updateBy($reservationId, [
+                "status" => 1 //Approved
+                ],null);
+            }
+
 
         }// end If
 

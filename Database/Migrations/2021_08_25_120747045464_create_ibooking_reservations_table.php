@@ -19,7 +19,7 @@ class CreateIbookingReservationsTable extends Migration
       $table->integer('customer_id')->unsigned()->nullable();
       $table->foreign('customer_id')->references('id')->on('users');
    
-      $table->tinyInteger('status')->default(1)->unsigned();
+      $table->tinyInteger('status')->default(0)->unsigned();
       
       $table->text('options')->nullable();
 

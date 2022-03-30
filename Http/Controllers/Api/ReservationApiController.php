@@ -35,40 +35,52 @@ class ReservationApiController extends BaseCrudController
   {
     \DB::beginTransaction();
     try {
-      //Get model data
-      $modelData = $request->input('attributes') ?? [];
-      $params = $this->getParamsRequest($request);
-      //Validate Request
-      if (isset($this->model->requestValidation['create'])) {
-        $this->validateRequestApi(new $this->model->requestValidation['create']($modelData));
-      }
+      //Check if allow public reservations
+      if(!setting("ibooking::allowPublicReservation") && !\Auth::user()){
+        $status = 500;
+        $response = ["messages" => [
+          [
+          "message" => trans('ibooking::common.noAllowPublicReservations'),
+          "type" => "error"
+          ]
+        ]];
+      }else {
 
-      //\Log::info("Ibooking: ReservationApiController|Create|ModelDataRequest: ".json_encode($modelData));
+        //Get model data
+        $modelData = $request->input('attributes') ?? [];
+        $params = $this->getParamsRequest($request);
+        //Validate Request
+        if (isset($this->model->requestValidation['create'])) {
+          $this->validateRequestApi(new $this->model->requestValidation['create']($modelData));
+        }
 
-      /*
-      ****Process with payment****
-      * 1. Create Checkout Cart
-      * 2. Create Order
-      * 3. User Pays the order (Event - OrderWasProcessed)
-      * 4. Event - ProcessReservationOrder: 
-      *     - Create Reservation
-              - Create Reservation Item - (Trait WithMeeting)
-              - Create Meeting
-              - Create Notification
-      */
-      if(is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment',null, false)){
-
-        $checkoutCart = $this->reservationService->createCheckoutCart($modelData['items']);
-       
-        $response = ["data" => ["redirectTo" => url(trans("icommerce::routes.store.checkout.create"))]];
-      }else{
+        //\Log::info("Ibooking: ReservationApiController|Create|ModelDataRequest: ".json_encode($modelData));
 
         $reservation = $this->reservationService->createReservation($modelData);
-        $response = ["data" => ["redirectTo" => url("/#/booking/reservation/index")]];
+
+        /*
+        ****Process with payment****
+        * 1. Create Checkout Cart
+        * 2. Create Order
+        * 3. User Pays the order (Event - OrderWasProcessed)
+        * 4. Event - ProcessReservationOrder:
+        *     - Update Reservation
+              - Create Meeting
+              - Create Notification
+        */
+        if (is_module_enabled('Icommerce') && setting('ibooking::reservationWithPayment', null, false)) {
+
+          $checkoutCart = $this->reservationService->createCheckoutCart($modelData, $reservation);
+       
+          $response = ["data" => ["redirectTo" => url(trans("icommerce::routes.store.checkout.create"))]];
+        } else {
+
+          $response = ["data" => ["redirectTo" => url("/ipanel/#/booking/reservations/index")]];
+        }
+
+
+        \DB::commit(); //Commit to Data Base
       }
-
-
-      \DB::commit(); //Commit to Data Base
     } catch (\Exception $e) {
 
       \Log::error('Ibooking: ReservationApiController|Create|Message: '.$e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine());

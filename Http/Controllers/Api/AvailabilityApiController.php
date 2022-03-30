@@ -51,6 +51,9 @@ class AvailabilityApiController extends BaseCrudController
         $q->where('ibooking__service_resource.service_id', $service->id);
       })->get();
 
+
+    $filterDate = isset($params->date) ? $params->date : date('Y-m-d');
+
     // To Each Resource
     foreach ($resources as $resource) {
       // Get Reservation Items from Resource

@@ -37,7 +37,7 @@ class Reservation extends CrudModel
   ];
 
   //============== RELATIONS ==============//
-  
+
   public function items()
   {
     return $this->hasMany(ReservationItem::class);
