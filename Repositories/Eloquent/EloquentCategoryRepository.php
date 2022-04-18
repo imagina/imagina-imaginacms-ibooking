@@ -32,6 +32,9 @@ class EloquentCategoryRepository extends EloquentCrudRepository implements Categ
      *
      */
 
+        if(isset($filter->hasServices))
+            $query->has('services');
+
     	//Response
     	return $query;
   	}
