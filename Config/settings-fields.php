@@ -171,6 +171,7 @@ return [
   ],
   'createExternalMeeting' => [
     'value' =>  "0",
+    "onlySuperAdmin" => true,
     'name' => 'ibooking::createExternalMeeting',
     'type' => 'checkbox',
     'props' => [
@@ -182,6 +183,7 @@ return [
   'allowPublicReservation' => [
     'name' => 'ibooking::allowPublicReservation',
     'value' => 1,
+    "onlySuperAdmin" => true,
     'type' => 'checkbox',
     'columns' => 'col-12 col-md-6',
     'props' => [
