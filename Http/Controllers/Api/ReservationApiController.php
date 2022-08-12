@@ -75,7 +75,16 @@ class ReservationApiController extends BaseCrudController
           $response = ["data" => ["redirectTo" => url(trans("icommerce::routes.store.checkout.create"))]];
         } else {
 
-          $response = ["data" => ["redirectTo" => url("/ipanel/#/booking/reservations/index")]];
+          //Default 
+          $url = "/ipanel/#/booking/reservations/index";
+
+          //If it's iadmin take that url
+          if(isset($params->setting) && isset($params->setting->appMode)) {
+            $url = "/".$params->setting->appMode."/#/booking/reservations/index";
+          }
+
+          $response = ["data" => ["redirectTo" => url($url)]];
+
         }
 
 
