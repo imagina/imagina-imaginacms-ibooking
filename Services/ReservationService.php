@@ -31,7 +31,7 @@ class ReservationService
           "quantity" => 1,
           "options" => ['reservationId'=>$reservation->id,'reservationItemData' => $reservationItemData['reservationItem']]
         ];
-   
+
         //\Log::info("Ibooking: Services|CheckoutService|Create: ".json_encode($products));
       }
 
@@ -68,6 +68,9 @@ class ReservationService
       $reservationItemData['reservationItem']['reservation_id'] = $reservation->id;
       $reservationItemRepository->create($reservationItemData['reservationItem']);
     }
+
+    //Include items relation if entity
+    $reservation->items;
 
     // Send Email and Notification Iadmin
     event(new ReservationWasCreated($reservation));

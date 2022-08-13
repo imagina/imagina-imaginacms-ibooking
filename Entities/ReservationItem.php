@@ -46,6 +46,8 @@ class ReservationItem extends CrudModel
     'status'
   ];
 
+  protected $with = ["fields"];
+
 //============== RELATIONS ==============//
 
   public function reservation()
