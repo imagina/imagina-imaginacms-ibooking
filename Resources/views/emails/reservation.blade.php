@@ -11,7 +11,7 @@
 	<div class="table-reservation-items" style="margin-bottom: 15px; font-size: 10px">
 
 		@foreach($reservation->items as $item)
-		 	
+
 		 	@if(!empty($item->category_title))
 		 		<tr>
 			 		<td>{{trans('ibooking::categories.single')}}:</td>
@@ -36,7 +36,7 @@
 		 	@if($item->price>0)
 		 		<tr>
 			 		<td>{{trans('ibooking::common.table.price')}}:</td>
-			 		<td>{{formatMoney($item->price)}}</td>
+			 		<td>{{isiteFormatMoney($item->price)}}</td>
 		 		</tr>
 		 	@endif
 
@@ -53,9 +53,9 @@
 			 		<td>{{date(config('asgard.ibooking.config.hourFormat'), strtotime($item->end_date))}}</td>
 		 		</tr>
 		 	@endif
-		 	
+
 		@endforeach
-		
+
 		<tr>
 			<td>{{trans('ibooking::common.table.status')}}:</td>
 			<td>{{$reservation->statusName}}</td>
