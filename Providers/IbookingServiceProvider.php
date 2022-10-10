@@ -50,7 +50,7 @@ class IbookingServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'cmsPages'), "asgard.ibooking.cmsPages");
         $this->mergeConfigFrom($this->getModuleConfigFilePath('ibooking', 'cmsSidebar'), "asgard.ibooking.cmsSidebar");
 
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        //$this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     }
 
     /**
