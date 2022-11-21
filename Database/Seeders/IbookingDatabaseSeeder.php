@@ -14,6 +14,6 @@ class IbookingDatabaseSeeder extends Seeder
    */
   public function run()
   {
-
+    $this->call(IbookingModuleTableSeeder::class);
   }
 }
