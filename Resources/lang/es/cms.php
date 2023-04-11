@@ -43,6 +43,17 @@ return [
       "success" => "Todo está listo! Nosotros nos encargamos de crear las reuniones en Zoom por ti..."
     ]
   ],
-  "helpShareUserResource" => "Puedes copiar los link de tus servicios y/o de tu recurso para compartirlos de una forma más facil"
+  "helpShareUserResource" => "Puedes copiar los link de tus servicios y/o de tu recurso para compartirlos de una forma más facil",
+  'documentation' => [
+    "categories" => "Es posible crear categories, con un nombre, descripción y organizarlas en modo de árbol
+    (categorías padres y categorías hijas) con el fin de categorizar todos tus servicios.",
+    'services' => "Son los servicios los que tus usuarios pueden reservar dentro de tu aplicación, estos servicios incluyen
+    el tiempo que puede durar cada turno y un precio ademas de toda la información necesaria para describirlo",
+    'resources' => "El recurso es el encargado de ejecutar un servicio reservado, cada recurso puede tener uno o varios
+    servicios asignados pero puede realizar solo uno a la vez, en cada recurso es posible configurar un horario de 
+    disponibilidad para que un servicio suyo pueda ser reservado.",
+    'reservations' => "Cuando un usuario adquiere un servicio se le llama 'Reservación' así la aplicacion es capaz de
+    identificar que servicio reservo un usuario junto a su recurso.",
+  ]
 ];
 

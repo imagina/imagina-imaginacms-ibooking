@@ -43,6 +43,17 @@ return [
       "success" => "Everything is ready! We take care of creating Zoom meetings for you ..."
     ]
   ],
-  "helpShareUserResource" => "You can copy the links of your services and/or your resource to share them in an easier way"
+  "helpShareUserResource" => "You can copy the links of your services and/or your resource to share them in an easier way",
+  'documentation' => [
+    "categories" => "It is possible to create categories, with a name, description and organize them in tree mode
+     (parent categories and child categories) in order to categorize all your services.",
+    'services' => "These are the services that your users can book within your application, these services include
+     a time that can last each turn and a price in addition to all the necessary information to describe it",
+    'resources' => "The resource is in charge of executing a reserved service, each resource can have one or more
+     assigned services but can perform only one at a time, in each resource it is possible to configure a schedule of
+     availability so that one of your services can be reserved.",
+    'reservations' => "When a user purchases a service it is called a `Reservation` so the application is able to
+     identify which service a user reserved next to her resource .",
+  ]
 ];
 
