@@ -21,6 +21,7 @@ class Service extends CrudModel
   use Translatable, WithProduct, MediaRelation, BelongsToTenant, Formeable, isFillable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
+  public $repository = 'Modules\Ibooking\Repositories\ServiceRepository';
   public $requestValidation = [
     'create' => 'Modules\Ibooking\Http\Requests\CreateServiceRequest',
     'update' => 'Modules\Ibooking\Http\Requests\UpdateServiceRequest',

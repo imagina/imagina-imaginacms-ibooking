@@ -17,6 +17,7 @@ class Reservation extends CrudModel
   //use BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationTransformer';
+  public $repository = 'Modules\Ibooking\Repositories\ReservationRepository';
   public $requestValidation = [
     'create' => 'Modules\Ibooking\Http\Requests\CreateReservationRequest',
     'update' => 'Modules\Ibooking\Http\Requests\UpdateReservationRequest',
