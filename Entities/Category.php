@@ -12,6 +12,7 @@ class Category extends CrudModel
   use Translatable, MediaRelation, BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\CategoryTransformer';
+  public $repository = 'Modules\Ibooking\Repositories\CategoryRepository';
   public $requestValidation = [
     'create' => 'Modules\Ibooking\Http\Requests\CreateCategoryRequest',
     'update' => 'Modules\Ibooking\Http\Requests\UpdateCategoryRequest',

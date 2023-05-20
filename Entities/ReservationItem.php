@@ -15,6 +15,7 @@ class ReservationItem extends CrudModel
   use WithMeeting, isFillable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
+  public $repository = 'Modules\Ibooking\Repositories\ReservationItemRepository';
   public $requestValidation = [
     'create' => 'Modules\Ibooking\Http\Requests\CreateReservationItemRequest',
     'update' => 'Modules\Ibooking\Http\Requests\UpdateReservationItemRequest',
