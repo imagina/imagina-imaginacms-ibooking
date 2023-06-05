@@ -72,4 +72,50 @@
       @endforeach
     </div>
   </div>
+  <style>
+    #pageResourcesShow #resourceContent {
+      padding: 40px 0;
+    }
+    #pageResourcesShow #resourceContent #resourceTitle {
+      color: white;
+      font-size: 60px;
+      line-height: 1;
+    }
+    #pageResourcesShow #resourceContent #resourceDescription {
+      color: white;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+    #pageResourcesShow #resourceContent .resource-image {
+      padding: 15px;
+      border: 2px solid white;
+      border-radius: 10px;
+      margin: 15px 0;
+      width: 90%;
+    }
+    #pageResourcesShow #servicesContent .service-content {
+      padding: 30px 0;
+      border-bottom: 1px solid #d2d2d2;
+    }
+    #pageResourcesShow #servicesContent .service-content:last-child {
+      border: none;
+    }
+    #pageResourcesShow #servicesContent .service-content .service-title {
+      line-height: 1.2;
+      font-weight: bold;
+      font-size: 40px;
+    }
+    #pageResourcesShow #servicesContent .service-content .service-description {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    #pageResourcesShow #servicesContent .service-content .service-image {
+      padding: 15px;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      margin: 25px 0;
+      width: 90%;
+    }
+
+  </style>
 @stop
