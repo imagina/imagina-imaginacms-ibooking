@@ -18,6 +18,7 @@ class Resource extends CrudModel
   use Translatable, Schedulable, MediaRelation, Meetingable, BelongsToTenant;
 
   public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
+  public $repository = 'Modules\Ibooking\Repositories\ResourceRepository';
   public $requestValidation = [
     'create' => 'Modules\Ibooking\Http\Requests\CreateResourceRequest',
     'update' => 'Modules\Ibooking\Http\Requests\UpdateResourceRequest',
