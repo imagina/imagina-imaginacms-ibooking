@@ -88,7 +88,7 @@ class SendReservation
         "message" => $subject,
         "link" => url('/ipanel/#/booking/reservations/index'),
         "content" => "ibooking::emails.reservation",
-        "view" => "ibooking::emails.Reservation",
+        "layout" => "notification::emails.layouts.template-1",
         "frontEvent" => [
           "name" => "ibooking.new.reservation",
         ],
