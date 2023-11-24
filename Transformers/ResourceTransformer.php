@@ -22,6 +22,8 @@ class ResourceTransformer extends CrudResource
       ]);
     }
 
+    $data['url'] = $this->url;
+
     return $data;
 
   }
