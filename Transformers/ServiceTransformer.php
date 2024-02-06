@@ -12,12 +12,12 @@ class ServiceTransformer extends CrudResource
 
 	public function modelAttributes($request)
 	{
-
-		$service = Service::find($this->id);
+    
+    $form = $this->forms->first();
 
 		return [
-			'form' => new FormTransformer($service->form),
-      		'formId' => $service->form ? $service->form->id : null
+      "form" => $form ?? '',
+      "formId" => $form->id ?? ''
 		];
 
 	}
