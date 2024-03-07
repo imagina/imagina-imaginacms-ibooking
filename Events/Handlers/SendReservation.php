@@ -54,7 +54,7 @@ class SendReservation
         $serviceForm = $service ? $service->form->first() : null; //get form service
 
         //Get field from form to notify
-        if ($serviceForm && isset($serviceForm->options->replyTo)) {
+        if ($serviceForm && isset($serviceForm->options) && isset($serviceForm->options->replyTo)) {
           $field = Field::find($serviceForm->options->replyTo);
 
           //Get field value and add it to emailTo
