@@ -1,5 +1,9 @@
 @php
-  $reservation = $data["reservation"];
+   //Extra Params | Update with Trait IsNotificable
+  if(isset($data['extraParams']) && $data['extraParams']['reservation'])
+    $reservation = $data['extraParams']['reservation'];
+  else
+    $reservation = $data["reservation"];
 @endphp
 
 @extends($data["layout"] ?? setting('notification::templateEmail'))
