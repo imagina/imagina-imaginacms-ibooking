@@ -28,10 +28,13 @@ class EventServiceProvider extends ServiceProvider
         }
 
         // Reservation Was Created
+        //Commented because it now works with IsNotificable Trait
+        /*
         Event::listen(
           "Modules\\Ibooking\\Events\\ReservationWasCreated",
           [SendReservation::class, 'handle']
         );
+        */
 
     }
 }
