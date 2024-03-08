@@ -10,9 +10,11 @@ use Modules\Ibooking\Traits\WithMeeting;
 use Modules\Ibooking\Entities\Status;
 use Modules\Ifillable\Traits\isFillable;
 
+use Modules\Notification\Traits\IsNotificable;
+
 class ReservationItem extends CrudModel
 {
-  use WithMeeting, isFillable;
+  use WithMeeting, isFillable, IsNotificable;
 
   public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
   public $repository = 'Modules\Ibooking\Repositories\ReservationItemRepository';
@@ -83,4 +85,47 @@ class ReservationItem extends CrudModel
 
   }
 
+  /**
+   * Make Notificable Params | to Trait
+   * @param $event (created|updated|deleted)
+   */
+  public function isNotificableParams($event)
+  {
+
+    //Validation Event Update
+    if($event=="updated"){
+      //Validation Att Status Change
+      if(!$this->wasChanged("status")){
+        return null;
+      }
+    }
+
+    //Get Emails and Broadcast
+    $reservationService = app("Modules\Ibooking\Services\ReservationService");
+    $result = $reservationService->getEmailsAndBroadcast($this->reservation);
+
+    return [
+      'created' => [
+        "title" => trans('ibooking::reservations.messages.purchase reservation') . " #" . $this->reservation->id,
+        "email" => $result['email'],
+        "broadcast" => $result['broadcast'],
+        "content" => "ibooking::emails.reservation",
+        "layout" => "notification::emails.layouts.template-1",
+        "extraParams" => [
+          'reservation' => $this->reservation
+        ],
+      ],
+      'updated' => [
+        "title" => trans("ibooking::reservations.email.statusChanged.title"),
+        "email" => $result['email'],
+        "broadcast" => $result['broadcast'],
+        "content" => "ibooking::emails.reservation",
+        "layout" => "notification::emails.layouts.template-1",
+        "extraParams" => [
+          'reservation' => $this->reservation
+        ],
+      ],
+    ];
+
+  }
 }

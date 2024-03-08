@@ -6,9 +6,14 @@ namespace Modules\Ibooking\Services;
 //Events
 use Modules\Ibooking\Events\ReservationWasCreated;
 
+//Entities
+use Modules\User\Entities\Sentinel\User;
+use Modules\Iforms\Entities\Field;
+
 class ReservationService
 {
 
+  public $log = "Ibooking::Services|ReservationService|";
 
   /**
    * @return cart service created
@@ -139,6 +144,66 @@ class ReservationService
     $response['reservationItem'] = array_merge($item, $reservationItem);
 
     return $response;
+
+  }
+
+  /**
+   * Get emails and broadcast information
+   */
+  public function getEmailsAndBroadcast($reservation,$params=null)
+  {
+
+   
+    //Emails from setting form-emails
+     
+      $emailTo = json_decode(setting("ibooking::formEmails", null, "[]"));
+      if (empty($emailTo)) //validate if its a string separately by commas
+        $emailTo = explode(',', setting('ibooking::formEmails'));
+
+      //Emails from users selected in the setting usersToNotify
+      $usersToNotify = json_decode(setting("ibooking::usersToNotify", null, "[]"));
+      $users = User::whereIn("id", $usersToNotify)->get();
+      $emailTo = array_merge($emailTo, $users->pluck('email')->toArray());
+      $broadcastTo = $users->pluck('id')->toArray();
+
+      //Get emails from the services form
+      foreach ($reservation->items as $item) {
+        $service = $item->service;//Get item service
+        $serviceForm = $service ? $service->form->first() : null; //get form service
+
+        //Get field from form to notify
+        if ($serviceForm && isset($serviceForm->options) && isset($serviceForm->options->replyTo)) {
+          $field = Field::find($serviceForm->options->replyTo);
+
+          //Get field value and add it to emailTo
+          if ($field) {
+            $itemFields = $item->formatFillableToModel($item->fields);
+            $itemFieldValue = $itemFields[$field->name] ?? $itemFields[snakeToCamel($field->name)] ??null;
+            //Validate if has email format
+            if ($itemFieldValue && filter_var($itemFieldValue, FILTER_VALIDATE_EMAIL))
+              $emailTo[] = $itemFieldValue;
+          }
+        }
+      }
+
+      //Extra params from event
+      if (!is_null($params)) {
+        if (isset($params['broadcastTo'])) {
+          $broadcastTo = array_merge($broadcastTo, $params['broadcastTo']);
+          //\Log::info("Ibooking: Events|Handler|SendReservation|broadcastTo: ".json_encode($broadcastTo));
+        }
+      }
+
+      if (!empty($reservation->customer_id)) {
+        $emailReservation = $reservation->customer->email;
+        array_push($emailTo, $emailReservation);
+      }
+
+      // Data Notification
+      $to["email"] = $emailTo;
+      $to["broadcast"] = $broadcastTo;
+    
+      return $to;
 
   }
 
