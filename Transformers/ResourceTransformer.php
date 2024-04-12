@@ -10,15 +10,17 @@ class ResourceTransformer extends CrudResource
     {
         $data = [];
 
-        $filter = json_decode($request->filter);
-        if (isset($filter->withMeetingConfig) && isset($this->options->email)) {
-            $data['meetingConfig'] = $this->validateMeetingRequirements([
-                'meetingConfig' => [
-                    'providerName' => $filter->withMeetingConfig,
-                    'email' => $this->options->email ?? null,
-                ],
-            ]);
-        }
+    $filter = json_decode($request->filter);
+    if (isset($filter->withMeetingConfig) && isset($this->options->email)) {
+      $data['meetingConfig'] = $this->validateMeetingRequirements([
+        'meetingConfig' => [
+          'providerName' => $filter->withMeetingConfig,
+          'email' => $this->options->email ?? null
+        ]
+      ]);
+    }
+
+    $data['url'] = $this->url;
 
         return $data;
     }

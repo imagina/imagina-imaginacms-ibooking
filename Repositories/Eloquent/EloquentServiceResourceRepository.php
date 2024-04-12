@@ -2,10 +2,10 @@
 
 namespace Modules\Ibooking\Repositories\Eloquent;
 
-use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
+use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 use Modules\Ibooking\Repositories\ServiceResourceRepository;
 
-class EloquentServiceResourceRepository extends EloquentBaseRepository implements ServiceResourceRepository
+class EloquentServiceResourceRepository extends EloquentCrudRepository implements ServiceResourceRepository
 {
     /**
      * Filter name to replace
