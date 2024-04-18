@@ -8,13 +8,17 @@ use Modules\Iforms\Transformers\FormTransformer;
 
 class ServiceTransformer extends CrudResource
 {
-    public function modelAttributes($request)
-    {
-        $service = Service::find($this->id);
 
-        return [
-            'form' => new FormTransformer($service->form),
-            'formId' => $service->form ? $service->form->id : null,
-        ];
-    }
+	public function modelAttributes($request)
+	{
+
+    $form = $this->forms->first();
+
+		return [
+      "form" => $form ?? '',
+      "formId" => $form->id ?? ''
+		];
+
+	}
+
 }

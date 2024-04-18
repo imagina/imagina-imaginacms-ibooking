@@ -4,16 +4,21 @@ namespace Modules\Ibooking\Entities;
 
 use Astrotomic\Translatable\Translatable;
 use Modules\Core\Icrud\Entities\CrudModel;
-use Modules\Ifillable\Traits\isFillable;
+
+use Modules\Ibooking\Entities\Category;
+use Modules\Ibooking\Entities\Resource;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+
 //Traits
-use Modules\Iforms\Support\Traits\Formeable;
 use Modules\Isite\Traits\WithProduct;
 use Modules\Media\Support\Traits\MediaRelation;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Modules\Iforms\Support\Traits\Formeable;
+use Modules\Ifillable\Traits\isFillable;
 
 class Service extends CrudModel
 {
-    use Translatable, WithProduct, MediaRelation, BelongsToTenant, Formeable, isFillable;
+
+  use Translatable, WithProduct, MediaRelation, BelongsToTenant, Formeable, isFillable;
 
     public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
 

@@ -44,11 +44,13 @@
       </tr>
     @endif
 
+    <tr>
+      <td>{{trans('ibooking::common.table.status')}}:</td>
+      <td>{{$item->statusName}}</td>
+    </tr>
+
   @endforeach
 
-  <tr>
-    <td>{{trans('ibooking::common.table.status')}}:</td>
-    <td>{{$reservation->statusName}}</td>
-  </tr>
+
 
 </div>
