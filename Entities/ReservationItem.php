@@ -2,13 +2,16 @@
 
 namespace Modules\Ibooking\Entities;
 
+use Illuminate\Database\Eloquent\Model;
 use Modules\Core\Icrud\Entities\CrudModel;
 use Modules\Ibooking\Traits\WithMeeting;
 use Modules\Ifillable\Traits\isFillable;
 
+use Modules\Notification\Traits\IsNotificable;
+
 class ReservationItem extends CrudModel
 {
-    use WithMeeting, isFillable;
+  use WithMeeting, isFillable, IsNotificable;
 
     public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
 

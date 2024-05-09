@@ -3,6 +3,9 @@
 namespace Modules\Ibooking\Console;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+
 use Modules\Ibooking\Entities\Reservation;
 
 class CheckStatusReservations extends Command

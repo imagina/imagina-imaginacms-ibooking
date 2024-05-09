@@ -5,6 +5,10 @@ namespace Modules\Ibooking\Services;
 //Events
 use Modules\Ibooking\Events\ReservationWasCreated;
 
+//Entities
+use Modules\User\Entities\Sentinel\User;
+use Modules\Iforms\Entities\Field;
+
 class ReservationService
 {
 

@@ -17,7 +17,7 @@ use Modules\Iqreable\Traits\IsQreable;
 
 class Resource extends CrudModel
 {
-    use Translatable, Schedulable, MediaRelation, Meetingable, BelongsToTenant;
+  use Translatable, Schedulable, MediaRelation, Meetingable, BelongsToTenant, IsQreable;
 
     public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
 

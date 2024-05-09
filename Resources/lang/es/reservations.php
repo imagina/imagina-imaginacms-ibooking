@@ -32,4 +32,11 @@ return [
         'canceled' => 'Cancelada',
     ],
 
+    'email' => [
+        'statusChanged' => [
+            'title' => "La reserva ha cambiado de estado",
+            'message' => "El estado de la reserva es: :statusName",
+        ]
+    ]
+
 ];
