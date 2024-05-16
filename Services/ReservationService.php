@@ -41,7 +41,7 @@ class ReservationService
         return $cartService;
     }
 
-    public function createReservation($data): reservation
+    public function createReservation($data): \Modules\Ibooking\Entities\Reservation
     {
         // Get Customer Id if exist
         if (isset($data['customer_id'])) {
