@@ -2,8 +2,8 @@
 
 namespace Modules\Ibooking\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface ServiceResourceRepository extends BaseRepository
+interface ServiceResourceRepository extends BaseCrudRepository
 {
 }

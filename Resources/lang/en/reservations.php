@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'single' => 'Reservation',
     'list resource' => 'List reservations',
     'create resource' => 'Create reservations',
     'edit resource' => 'Edit reservations',
@@ -12,6 +13,7 @@ return [
     ],
     'button' => [
         'create reservation' => 'Create a reservation',
+        'reserve' => 'Reserve',
     ],
     'table' => [
     ],
@@ -20,5 +22,11 @@ return [
     'messages' => [
     ],
     'validation' => [
+    ],
+
+    'status' => [
+        'pending' => 'Pending',
+        'approved' => 'Approved',
+        'canceled' => 'Canceled',
     ],
 ];

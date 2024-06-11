@@ -2,10 +2,10 @@
 
 namespace Modules\Ibooking\Repositories\Cache;
 
+use Modules\Core\Icrud\Repositories\Cache\BaseCacheCrudDecorator;
 use Modules\Ibooking\Repositories\ResourceRepository;
-use Modules\Core\Repositories\Cache\BaseCacheDecorator;
 
-class CacheResourceDecorator extends BaseCacheDecorator implements ResourceRepository
+class CacheResourceDecorator extends BaseCacheCrudDecorator implements ResourceRepository
 {
     public function __construct(ResourceRepository $resource)
     {
