@@ -3,12 +3,11 @@
 namespace Modules\Ibooking\Entities;
 
 use Modules\Core\Icrud\Entities\CrudModel;
-use Modules\Ibooking\Traits\WithMeeting;
 use Modules\Ifillable\Traits\isFillable;
 
 class ReservationItem extends CrudModel
 {
-    use WithMeeting, isFillable;
+    use isFillable;
 
     public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
 

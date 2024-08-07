@@ -8,7 +8,9 @@ class CreateResourceRequest extends BaseFormRequest
 {
     public function rules()
     {
-        return [];
+        return [
+          'assigned_to_id' => 'required',
+        ];
     }
 
     public function translationRules()

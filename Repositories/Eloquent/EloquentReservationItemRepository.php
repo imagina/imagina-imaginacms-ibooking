@@ -26,7 +26,7 @@ class EloquentReservationItemRepository extends EloquentCrudRepository implement
             $query->where(function ($q) use ($filter) {
                 $q->where('customer_id', $filter->userId)
                   ->orWhereIn('resource_id', function ($sq) use ($filter) {
-                      $sq->select('id')->from('ibooking__resources')->where('created_by', $filter->userId);
+                      $sq->select('id')->from('ibooking__resources')->where('assigned_to_id', $filter->userId);
                   });
             });
         }
