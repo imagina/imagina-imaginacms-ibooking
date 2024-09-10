@@ -31,6 +31,7 @@ Route::prefix('/ibooking/v1')->group(function (Router $router) {
         'module' => 'ibooking',
         'prefix' => 'reservation-items',
         'controller' => 'ReservationItemApiController',
+        'permission' => 'ibooking.reservationitems'
         //'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
     ]);
     $router->get('availabilities', [
