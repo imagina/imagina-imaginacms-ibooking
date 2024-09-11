@@ -38,7 +38,7 @@ class Reservation extends CrudModel
 
     public function items()
     {
-        return $this->hasMany(ReservationItem::class);
+        return $this->hasMany(ReservationItem::class)->orderBy('start_date', 'asc');
     }
 
     public function customer()
