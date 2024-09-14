@@ -20,71 +20,72 @@ class Service extends CrudModel
 
   use Translatable, WithProduct, MediaRelation, BelongsToTenant, Formeable, isFillable;
 
-    public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
+  public $transformer = 'Modules\Ibooking\Transformers\ServiceTransformer';
 
-    public $repository = 'Modules\Ibooking\Repositories\ServiceRepository';
+  public $repository = 'Modules\Ibooking\Repositories\ServiceRepository';
 
-    public $requestValidation = [
-        'create' => 'Modules\Ibooking\Http\Requests\CreateServiceRequest',
-        'update' => 'Modules\Ibooking\Http\Requests\UpdateServiceRequest',
-    ];
+  public $requestValidation = [
+    'create' => 'Modules\Ibooking\Http\Requests\CreateServiceRequest',
+    'update' => 'Modules\Ibooking\Http\Requests\UpdateServiceRequest',
+  ];
 
-    protected $table = 'ibooking__services';
+  protected $table = 'ibooking__services';
 
-    public $translatedAttributes = ['title', 'description', 'slug'];
+  public $translatedAttributes = ['title', 'description', 'slug'];
 
-    protected $casts = ['options' => 'array'];
+  protected $casts = ['options' => 'array'];
 
-    protected $fillable = [
-        'price',
-        'status',
-        'with_meeting',
-        'category_id',
-        'shift_time',
-        'options',
-    ];
+  protected $fillable = [
+    'price',
+    'status',
+    'with_meeting',
+    'category_id',
+    'shift_time',
+    'options',
+    'is_internal'
+  ];
 
-    public $modelRelations = [
-        'categories' => 'belongsToMany',
-        'resources' => 'belongsToMany',
-    ];
+  public $modelRelations = [
+    'categories' => 'belongsToMany',
+    'resources' => 'belongsToMany',
+  ];
 
-    /**
-     * Relation many to many with categories
-     *
-     * @return mixed
-     */
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'ibooking__service_category');
-    }
+  /**
+   * Relation many to many with categories
+   *
+   * @return mixed
+   */
+  public function categories()
+  {
+    return $this->belongsToMany(Category::class, 'ibooking__service_category');
+  }
 
-    /**
-     * Relation Many to Many with resources
-     *
-     * @return mixed
-     */
-    public function resources()
-    {
-        return $this->belongsToMany(Resource::class, 'ibooking__service_resource');
-    }
+  /**
+   * Relation Many to Many with resources
+   *
+   * @return mixed
+   */
+  public function resources()
+  {
+    return $this->belongsToMany(Resource::class, 'ibooking__service_resource');
+  }
 
-    public function reservationItems()
-    {
-        return $this->hasMany(ReservationItem::class);
-    }
+  public function reservationItems()
+  {
+    return $this->hasMany(ReservationItem::class);
+  }
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class)->with('translations');
-    }
+  public function category()
+  {
+    return $this->belongsTo(Category::class)->with('translations');
+  }
 
-    /*
-    * Product - Required shipping
-    * Is used in trait WithProduct
-    */
-    public function getRequiredShippingAttribute()
-    {
-        return false;
-    }
+  /*
+  * Product - Required shipping
+  * Is used in trait WithProduct
+  */
+  public function getRequiredShippingAttribute()
+  {
+    return false;
+  }
 }

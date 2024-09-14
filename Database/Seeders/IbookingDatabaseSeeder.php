@@ -16,7 +16,7 @@ class IbookingDatabaseSeeder extends Seeder
         Model::unguard();
         ProcessSeeds::dispatch([
             'baseClass' => "\Modules\Ibooking\Database\Seeders",
-            'seeds' => ['IbookingModuleTableSeeder'],
+            'seeds' => ['IbookingModuleTableSeeder','IbookingMoveValuesRIToReservationSeeder'],
         ]);
     }
 }

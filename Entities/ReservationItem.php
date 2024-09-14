@@ -8,69 +8,68 @@ use Modules\Ifillable\Traits\isFillable;
 
 class ReservationItem extends CrudModel
 {
-    use WithMeeting, isFillable;
+  use WithMeeting, isFillable;
 
-    public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
+  public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
 
-    public $repository = 'Modules\Ibooking\Repositories\ReservationItemRepository';
+  public $repository = 'Modules\Ibooking\Repositories\ReservationItemRepository';
 
-    public $requestValidation = [
-        'create' => 'Modules\Ibooking\Http\Requests\CreateReservationItemRequest',
-        'update' => 'Modules\Ibooking\Http\Requests\UpdateReservationItemRequest',
-    ];
+  public $requestValidation = [
+    'create' => 'Modules\Ibooking\Http\Requests\CreateReservationItemRequest',
+    'update' => 'Modules\Ibooking\Http\Requests\UpdateReservationItemRequest',
+  ];
 
-    public $modelRelations = [
-        'reservation' => 'belongsTo',
-        'service' => 'belongsTo',
-        'resource' => 'belongsTo',
-    ];
+  public $modelRelations = [
+    'reservation' => 'belongsTo',
+    'service' => 'belongsTo',
+    'resource' => 'belongsTo',
+  ];
 
-    protected $table = 'ibooking__reservation_items';
+  protected $table = 'ibooking__reservation_items';
 
-    protected $fillable = [
-        'reservation_id',
-        'service_id',
-        'resource_id',
-        'category_id',
-        'category_title',
-        'service_title',
-        'resource_title',
-        'price',
-        'start_date',
-        'end_date',
-        'customer_id',
-        'entity_type',
-        'entity_id',
-        'status',
-    ];
+  protected $fillable = [
+    'reservation_id',
+    'service_id',
+    'resource_id',
+    'category_id',
+    'category_title',
+    'service_title',
+    'resource_title',
+    'price',
+    'customer_id',
+    'entity_type',
+    'entity_id',
+    'status',
+    'shift_time',
+  ];
 
-    protected $with = ['fields'];
+  protected $with = ['fields'];
 
-    //============== RELATIONS ==============//
+  //============== RELATIONS ==============//
 
-    public function reservation()
-    {
-        return $this->belongsTo(Reservation::class);
-    }
+  public function reservation()
+  {
+    return $this->belongsTo(Reservation::class);
+  }
 
-    public function service()
-    {
-        return $this->belongsTo(Service::class);
-    }
+  public function service()
+  {
+    return $this->belongsTo(Service::class);
+  }
 
-    public function resource()
-    {
-        return $this->belongsTo(Resource::class);
-    }
+  public function resource()
+  {
+    return $this->belongsTo(Resource::class);
+  }
 
-    public function customer()
-    {
-        $driver = config('asgard.user.config.driver');
+  public function customer()
+  {
+    $driver = config('asgard.user.config.driver');
 
-        return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
-    }
+    return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User", 'customer_id');
+  }
 
-    //============== MUTATORS / ACCESORS ==============//
+  //============== MUTATORS / ACCESORS ==============//
 
   public function getStatusNameAttribute()
   {
@@ -88,9 +87,9 @@ class ReservationItem extends CrudModel
   {
 
     //Validation Event Update
-    if($event=="updated"){
+    if ($event == "updated") {
       //Validation Att Status Change
-      if(!$this->wasChanged("status")){
+      if (!$this->wasChanged("status")) {
         return null;
       }
     }

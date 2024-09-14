@@ -28,11 +28,6 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
      * if (isset($filter->status)) $query->where('status', $filter->status);
      */
 
-    if (isset($filter->orderByItemsDate)) {
-      $query->join(\DB::raw('(SELECT reservation_id, MIN(start_date) as min_start_date FROM ibooking__reservation_items GROUP BY reservation_id) as sub'), 'ibooking__reservations.id', '=', 'sub.reservation_id')
-        ->orderBy('sub.min_start_date')
-        ->select('ibooking__reservations.*');
-    }
 
     //Response
     return $query;
