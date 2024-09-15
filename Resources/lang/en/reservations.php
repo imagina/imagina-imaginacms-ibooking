@@ -28,5 +28,7 @@ return [
         'pending' => 'Pending',
         'approved' => 'Approved',
         'canceled' => 'Canceled',
+        'inProgress' => 'In progress',
+        'completed' => 'Completed',
     ],
 ];

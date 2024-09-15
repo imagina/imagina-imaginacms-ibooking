@@ -30,6 +30,8 @@ return [
         'pending' => 'Pendiente',
         'approved' => 'Aprobada',
         'canceled' => 'Cancelada',
+        'inProgress' => 'En progreso',
+        'completed' => 'Completado',
     ],
 
 ];
