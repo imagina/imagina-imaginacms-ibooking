@@ -10,6 +10,10 @@ class Status
 
     const CANCELED = 2;
 
+    const INPROGRESS  = 3;
+
+    const COMPLETED = 4;
+
     private $statuses = [];
 
     private $statuses2 = [];
@@ -20,6 +24,8 @@ class Status
             self::PENDING => trans('ibooking::reservations.status.pending'),
             self::APPROVED => trans('ibooking::reservations.status.approved'),
             self::CANCELED => trans('ibooking::reservations.status.canceled'),
+            self::INPROGRESS => trans('ibooking::reservations.status.inProgress'),
+            self::COMPLETED => trans('ibooking::reservations.status.completed'),
         ];
     }
 
