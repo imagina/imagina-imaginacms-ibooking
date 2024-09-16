@@ -17,23 +17,33 @@ class Status extends CrudStaticModel
     $this->records = [
       self::PENDING => [
         'title' => trans('ibooking::reservations.status.pending'),
-        'color' => ''
+        'color' => '#f39c12', // Orange (indicating waiting or action needed)
+        'icon' => 'fas fa-hourglass-half', // Hourglass indicating waiting
+        'nextStatus' => [self::APPROVED, self::CANCELED]
       ],
       self::APPROVED => [
         'title' => trans('ibooking::reservations.status.approved'),
-        'color' => ''
+        'color' => '#28a745', // Green (indicating success or approval)
+        'icon' => 'fas fa-check-circle', // Checkmark indicating approval
+        'nextStatus' => [self::PENDING, self::CANCELED, self::INPROGRESS, self::COMPLETED]
       ],
       self::CANCELED => [
         'title' => trans('ibooking::reservations.status.canceled'),
-        'color' => ''
+        'color' => '#dc3545', // Red (indicating cancellation or error)
+        'icon' => 'fas fa-times-circle', // Cross indicating cancellation
+        'nextStatus' => [self::PENDING]
       ],
       self::INPROGRESS => [
         'title' => trans('ibooking::reservations.status.inProgress'),
-        'color' => ''
+        'color' => '#17a2b8', // Light blue (indicating ongoing process)
+        'icon' => 'fas fa-spinner', // Spinner indicating in-progress
+        'nextStatus' => [self::CANCELED, self::COMPLETED]
       ],
       self::COMPLETED => [
         'title' => trans('ibooking::reservations.status.completed'),
-        'color' => ''
+        'color' => '#007bff', // Blue (indicating completion or success)
+        'icon' => 'fas fa-check-square', // Check-square indicating completion
+        'nextStatus' => [self::PENDING]
       ],
     ];
   }

@@ -71,6 +71,12 @@ class Reservation extends CrudModel
     return $status->get($this->status);
   }
 
+  public function getStatusModelAttribute()
+  {
+    $status = new Status();
+    return $status->show($this->status);
+  }
+
   public function getHumanShiftTimeAttribute()
   {
     return humanizeDuration($this->start_date, $this->end_date);
