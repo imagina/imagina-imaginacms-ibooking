@@ -6,6 +6,7 @@ use Carbon\Carbon as Time;
 use Illuminate\Http\Request;
 //Model
 use Modules\Core\Icrud\Controllers\BaseCrudController;
+use Modules\Ibooking\Entities\Reservation;
 use Modules\Ibooking\Entities\ReservationItem;
 use Modules\Ibooking\Entities\Resource;
 use Modules\Ibooking\Entities\Service;
@@ -48,22 +49,32 @@ class AvailabilityApiController extends BaseCrudController
 
         $filterDate = isset($params->date) ? $params->date : date('Y-m-d');
 
+        $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
+        $paramsReservation = [
+          'filter' => [
+            'resourceId' => 0,
+            'status' => [
+              'where' => 'notIn',
+              'value' => [2,4]
+            ]
+          ]
+        ];
+
         // To Each Resource
         foreach ($resources as $resource) {
+            $paramsReservation['filter']['resourceId'] = $resource->id;
             // Get Reservation Items from Resource
-            $reservationItems = ReservationItem::where('resource_id', $resource->id)
-            ->where('status', '=', 0)//Pending
-            ->orWhere('status', '=', 1)//Approved
-            ->get();
+            $reservations = $reservationRepository->getItemsBy(json_decode(json_encode($paramsReservation)));
+
 
             // Get busy shifts
             $busyShifts = [];
-            foreach ($reservationItems as $item) {
+            foreach ($reservations as $reservation) {
                 // Add format to shifts
                 array_push($busyShifts, [
-                    'startTime' => Time::parse($item->start_date)->toTimeString(),
-                    'endTime' => Time::parse($item->end_date)->toTimeString(),
-                    'calendarDate' => Time::parse($item->start_date)->toDateString(),
+                    'startTime' => Time::parse($reservation->start_date)->toTimeString(),
+                    'endTime' => Time::parse($reservation->end_date)->toTimeString(),
+                    'calendarDate' => Time::parse($reservation->start_date)->toDateString(),
                 ]);
             }
 
