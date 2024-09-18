@@ -48,6 +48,9 @@ class ReservationService
             $reservationData = ['customer_id' => $data['customer_id'], 'items' => []];
         }
 
+        $reservationData['start_date'] = $data['start_date'];
+        $reservationData['end_date'] = $data['end_date'];
+
         // If no exist is 0 (Pending)
         $reservationData['status'] = (int) setting('ibooking::reservationStatusDefault', null, 0);
 
@@ -56,28 +59,14 @@ class ReservationService
 
         // Create Reservation and ReservationItem
         $reservation = $reservationRepository->create($reservationData);
-        // Get All start_date
-        $start_dates = array_column($data['items'], 'start_date');
 
-        // Get the early start_date
-        $earliest_start_date = min($start_dates);
-
-        $shift_time_general = 0;
         $reservationItemRepository = app('Modules\Ibooking\Repositories\ReservationItemRepository');
         // Add Reservation Item for ItemS
         foreach ($data['items'] as $item) {
             $reservationItemData = $this->createReservationItemData($item, $reservationData);
-            $shift_time_general += $reservationItemData['reservationItem']['shift_time'];
             $reservationItemData['reservationItem']['reservation_id'] = $reservation->id;
             $reservationItemRepository->create($reservationItemData['reservationItem']);
         }
-
-        $reservationDates = [
-          'start_date' => $earliest_start_date,
-          'end_date' => date('Y-m-d H:i:s', strtotime("+$shift_time_general minutes", strtotime($earliest_start_date)))
-        ];
-
-      $reservation = $reservationRepository->updateBy($reservation->id, $reservationDates);
 
     //Include items relation if entity
     $newReservationData = $reservationRepository->getItem($reservation->id, (object)[

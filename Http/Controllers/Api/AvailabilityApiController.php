@@ -34,38 +34,51 @@ class AvailabilityApiController extends BaseCrudController
         // Get Params
         $params = $this->getParamsRequest($request)->filter;
 
+        //Init repositories
+        $serviceRepository = app('Modules\Ibooking\Repositories\ServiceRepository');
+        $resourceRepository = app('Modules\Ibooking\Repositories\ResourceRepository');
+        $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
+
+        $paramsService = [
+          'filter' => ['id' => $params->serviceId]
+        ];
+
         // Get Schedule and WorkTimes to this Service ID
-        $service = Service::find($params->serviceId);
+        $services = $serviceRepository->getItemsBy(json_decode(json_encode($paramsService)));
+
         $response = [];
 
+        $paramsResource = [
+          'includes' => 'schedule.workTimes'
+        ];
         // Exist Resource ID
         if (isset($params->resourceId)) {
-            $resources = Resource::with('schedule.workTimes')->where('id', $params->resourceId)->get();
+            $paramsResource['filter']['id'] = $params->resourceId;
         } else {
-            $resources = Resource::with('schedule.workTimes')->whereHas('services', function ($q) use ($service) {
-                $q->where('ibooking__service_resource.service_id', $service->id);
-            })->get();
+            $paramsResource['filter']['serviceId'] = $services->pluck('id')->toArray();
         }
+
+        $resources = $resourceRepository->getItemsBy(json_decode(json_encode($paramsResource)));
 
         $filterDate = isset($params->date) ? $params->date : date('Y-m-d');
 
-        $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
         $paramsReservation = [
           'filter' => [
-            'resourceId' => 0,
             'status' => [
               'where' => 'notIn',
-              'value' => [2,4]
+              'value' => [2] //Ignore only canceled
             ]
           ]
         ];
+
+        $shirtTimes = $services->pluck('shift_time')->toArray();
+        $totalShiftTime = array_sum($shirtTimes);
 
         // To Each Resource
         foreach ($resources as $resource) {
             $paramsReservation['filter']['resourceId'] = $resource->id;
             // Get Reservation Items from Resource
             $reservations = $reservationRepository->getItemsBy(json_decode(json_encode($paramsReservation)));
-
 
             // Get busy shifts
             $busyShifts = [];
@@ -80,7 +93,7 @@ class AvailabilityApiController extends BaseCrudController
 
             //Obtiene shifts por resources
             $shifts = $resource->schedule->getShifts([
-                'shiftTime' => $service->shift_time ?? 30,
+                'shiftTime' => $totalShiftTime ?? 30,
                 'dateRange' => isset($params->date) ? [$params->date] : [],
                 'timeRange' => isset($params->time) && ! is_null($params->time) ? $params->time : [],
                 'busyShifts' => $busyShifts,
