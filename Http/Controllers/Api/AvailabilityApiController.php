@@ -67,8 +67,8 @@ class AvailabilityApiController extends BaseCrudController
           ]
         ];
 
-        $shirtTimes = $services->pluck('shift_time')->toArray();
-        $totalShiftTime = array_sum($shirtTimes);
+        $shiftTimes = $services->pluck('shift_time')->toArray();
+        $totalShiftTime = array_sum($shiftTimes);
 
         // To Each Resource
         foreach ($resources as $resource) {
