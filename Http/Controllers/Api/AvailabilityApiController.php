@@ -6,10 +6,7 @@ use Carbon\Carbon as Time;
 use Illuminate\Http\Request;
 //Model
 use Modules\Core\Icrud\Controllers\BaseCrudController;
-use Modules\Ibooking\Entities\Reservation;
-use Modules\Ibooking\Entities\ReservationItem;
 use Modules\Ibooking\Entities\Resource;
-use Modules\Ibooking\Entities\Service;
 use Modules\Ibooking\Repositories\ResourceRepository;
 
 class AvailabilityApiController extends BaseCrudController
@@ -36,7 +33,6 @@ class AvailabilityApiController extends BaseCrudController
 
         //Init repositories
         $serviceRepository = app('Modules\Ibooking\Repositories\ServiceRepository');
-        $resourceRepository = app('Modules\Ibooking\Repositories\ResourceRepository');
         $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
         $paramsService = [
@@ -58,7 +54,7 @@ class AvailabilityApiController extends BaseCrudController
             $paramsResource['filter']['serviceId'] = $services->pluck('id')->toArray();
         }
 
-        $resources = $resourceRepository->getItemsBy(json_decode(json_encode($paramsResource)));
+        $resources = $this->modelRepository->getItemsBy(json_decode(json_encode($paramsResource)));
 
         $filterDate = isset($params->date) ? $params->date : date('Y-m-d');
 
