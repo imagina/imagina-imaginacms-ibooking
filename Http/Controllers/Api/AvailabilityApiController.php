@@ -6,9 +6,7 @@ use Carbon\Carbon as Time;
 use Illuminate\Http\Request;
 //Model
 use Modules\Core\Icrud\Controllers\BaseCrudController;
-use Modules\Ibooking\Entities\ReservationItem;
 use Modules\Ibooking\Entities\Resource;
-use Modules\Ibooking\Entities\Service;
 use Modules\Ibooking\Repositories\ResourceRepository;
 
 class AvailabilityApiController extends BaseCrudController
@@ -33,43 +31,65 @@ class AvailabilityApiController extends BaseCrudController
         // Get Params
         $params = $this->getParamsRequest($request)->filter;
 
+        //Init repositories
+        $serviceRepository = app('Modules\Ibooking\Repositories\ServiceRepository');
+        $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
+
+        $paramsService = [
+          'filter' => ['id' => $params->serviceId]
+        ];
+
         // Get Schedule and WorkTimes to this Service ID
-        $service = Service::find($params->serviceId);
+        $services = $serviceRepository->getItemsBy(json_decode(json_encode($paramsService)));
+
         $response = [];
 
+        $paramsResource = [
+          'includes' => 'schedule.workTimes'
+        ];
         // Exist Resource ID
         if (isset($params->resourceId)) {
-            $resources = Resource::with('schedule.workTimes')->where('id', $params->resourceId)->get();
+            $paramsResource['filter']['id'] = $params->resourceId;
         } else {
-            $resources = Resource::with('schedule.workTimes')->whereHas('services', function ($q) use ($service) {
-                $q->where('ibooking__service_resource.service_id', $service->id);
-            })->get();
+            $paramsResource['filter']['serviceId'] = $services->pluck('id')->toArray();
         }
+
+        $resources = $this->modelRepository->getItemsBy(json_decode(json_encode($paramsResource)));
 
         $filterDate = isset($params->date) ? $params->date : date('Y-m-d');
 
+        $paramsReservation = [
+          'filter' => [
+            'status' => [
+              'where' => 'notIn',
+              'value' => [2] //Ignore only canceled
+            ]
+          ]
+        ];
+
+        $shirtTimes = $services->pluck('shift_time')->toArray();
+        $totalShiftTime = array_sum($shirtTimes);
+
         // To Each Resource
         foreach ($resources as $resource) {
+            $paramsReservation['filter']['resourceId'] = $resource->id;
             // Get Reservation Items from Resource
-            $reservationItems = ReservationItem::where('resource_id', $resource->id)
-            ->where('status', '=', 0)//Pending
-            ->orWhere('status', '=', 1)//Approved
-            ->get();
+            $reservations = $reservationRepository->getItemsBy(json_decode(json_encode($paramsReservation)));
 
             // Get busy shifts
             $busyShifts = [];
-            foreach ($reservationItems as $item) {
+            foreach ($reservations as $reservation) {
                 // Add format to shifts
                 array_push($busyShifts, [
-                    'startTime' => Time::parse($item->start_date)->toTimeString(),
-                    'endTime' => Time::parse($item->end_date)->toTimeString(),
-                    'calendarDate' => Time::parse($item->start_date)->toDateString(),
+                    'startTime' => Time::parse($reservation->start_date)->toTimeString(),
+                    'endTime' => Time::parse($reservation->end_date)->toTimeString(),
+                    'calendarDate' => Time::parse($reservation->start_date)->toDateString(),
                 ]);
             }
 
             //Obtiene shifts por resources
             $shifts = $resource->schedule->getShifts([
-                'shiftTime' => $service->shift_time ?? 30,
+                'shiftTime' => $totalShiftTime ?? 30,
                 'dateRange' => isset($params->date) ? [$params->date] : [],
                 'timeRange' => isset($params->time) && ! is_null($params->time) ? $params->time : [],
                 'busyShifts' => $busyShifts,

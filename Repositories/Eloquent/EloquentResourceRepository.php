@@ -27,6 +27,14 @@ class EloquentResourceRepository extends EloquentCrudRepository implements Resou
          * Example filter Query
          * if (isset($filter->status)) $query->where('status', $filter->status);
          */
+        if (isset($filter->serviceId)) {
+          $serviceId = (array)$filter->serviceId;
+          if (count($serviceId)) {
+            $query->whereHas('services', function ($q) use ($serviceId) {
+              $q->whereIn('ibooking__service_resource.service_id', $serviceId);
+            });
+          }
+        }
 
         //Response
         return $query;

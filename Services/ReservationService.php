@@ -48,6 +48,9 @@ class ReservationService
             $reservationData = ['customer_id' => $data['customer_id'], 'items' => []];
         }
 
+        $reservationData['start_date'] = $data['start_date'];
+        $reservationData['end_date'] = $data['end_date'];
+
         // If no exist is 0 (Pending)
         $reservationData['status'] = (int) setting('ibooking::reservationStatusDefault', null, 0);
 
@@ -91,6 +94,7 @@ class ReservationService
             $reservationItem['service_id'] = $service->id;
             $reservationItem['service_title'] = $service->title;
             $reservationItem['price'] = $service->price;
+            $reservationItem['shift_time'] = $service->shift_time;
 
             // Added service
             $response['service'] = $service;
