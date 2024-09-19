@@ -17,6 +17,7 @@ return [
         'reservationStatusDefault' => 'Estado de la Reserva por defecto (Al Crearse)',
         'waitingTimeToCancelReservation' => 'Tiempo de espera (En Minutos) para cancelar una reservación',
         'allowPublicReservation' => 'Permitir reservas publicas',
+        'autoUpdateReservationDates' => 'Actualizar fechas de reserva con cambios de estados',
     ],
 
     'settingHints' => [
@@ -28,4 +29,7 @@ return [
     ],
     'noAllowPublicReservations' => 'Debes de iniciar sesión para generar una reserva',
 
+    'helpText' => [
+       'autoUpdateReservationDates' => 'Activa esta opción para actualizar la fecha de inicio al cambiar el estado a "En progreso" y la fecha de finalización al cambiar el estado a "Completado" en las reservas.'
+    ]
 ];

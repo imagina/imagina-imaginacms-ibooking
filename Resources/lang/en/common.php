@@ -17,6 +17,7 @@ return [
         'reservationStatusDefault' => 'Reservation Status by Default',
         'waitingTimeToCancelReservation' => 'WaitingTime (in Minutes) to cancel reservation',
         'allowPublicReservation' => 'Allow public reservations',
+        'autoUpdateReservationDates' => 'Update reservation dates with status changes',
     ],
 
     'settingHints' => [
@@ -28,4 +29,7 @@ return [
     ],
     'noAllowPublicReservations' => 'You could login to do a booking',
 
+    'helpText' => [
+      'autoUpdateReservationDates' => 'Enable this option to update the start date when the status changes to "In Progress" and the end date when it changes to "Completed" in reservations.'
+    ]
 ];

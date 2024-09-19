@@ -48,4 +48,14 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     //Response
     return $query;
   }
+
+  public function beforeUpdate(&$data)
+  {
+    $boolValue = (bool)setting('ibooking::allowChangeAutomaticDates', null, false);
+    if ($boolValue)
+    {
+      if($data['status'] == 3) $data['start_date'] = now(); // In Progress State
+      else if($data['status'] == 4) $data['end_date'] = now(); // Completed State
+    }
+  }
 }

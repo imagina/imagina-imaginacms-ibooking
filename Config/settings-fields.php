@@ -190,4 +190,22 @@ return [
             'falseValue' => '0',
         ],
     ],
+
+    'allowChangeAutomaticDates' => [
+      'name' => 'ibooking::allowChangeAutomaticDates',
+      'value' => '0',
+      'onlySuperAdmin' => true,
+      'type' => 'select',
+      'columns' => 'col-12 col-md-6',
+      'help' => [
+        'description' => 'ibooking::common.helpText.autoUpdateReservationDates',
+      ],
+      'props' => [
+        'label' => 'ibooking::common.settings.autoUpdateReservationDates',
+        'options' => [
+          ["label" => 'isite::cms.label.enabled', "value" => '1'],
+          ["label" => 'isite::cms.label.disabled', "value" => '0'],
+        ]
+      ]
+    ],
 ];
