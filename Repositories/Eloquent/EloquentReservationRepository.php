@@ -28,6 +28,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
      * Example filter Query
      * if (isset($filter->status)) $query->where('status', $filter->status);
      */
+    //Filter by resource
     if (isset($filter->resourceId)) {
       $resorceId = is_array($filter->resourceId) ? $filter->resourceId : [$filter->resourceId];
       if (count($resorceId)) {
@@ -37,11 +38,21 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       }
     }
 
+    //Filter by service
     if (isset($filter->serviceId)) {
       $serviceId = is_array($filter->serviceId) ? $filter->serviceId : [$filter->serviceId];
       if (count($serviceId)) {
         $query->whereHas('items', function ($query) use ($serviceId) {
           $query->whereIn('service_id', $serviceId);
+        });
+      }
+    }
+    //Filter by category
+    if (isset($filter->categoryId)) {
+      $categoryId = is_array($filter->categoryId) ? $filter->categoryId : [$filter->categoryId];
+      if (count($categoryId)) {
+        $query->whereHas('items', function ($query) use ($categoryId) {
+          $query->whereIn('category_id', $categoryId);
         });
       }
     }

@@ -88,4 +88,9 @@ class Service extends CrudModel
   {
     return false;
   }
+
+  public function getHumanShiftTimeAttribute()
+  {
+    return convertMinutesToHumanReadable($this->shift_time);
+  }
 }
