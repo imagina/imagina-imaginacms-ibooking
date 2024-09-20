@@ -3,6 +3,7 @@
 namespace Modules\Ibooking\Repositories\Eloquent;
 
 use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
+use Modules\Ibooking\Entities\Status;
 use Modules\Ibooking\Repositories\ReservationRepository;
 
 class EloquentReservationRepository extends EloquentCrudRepository implements ReservationRepository
@@ -47,5 +48,19 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
 
     //Response
     return $query;
+  }
+
+  public function afterUpdate(&$model, &$data)
+  {
+    $boolValue = (bool)setting('ibooking::allowChangeAutomaticDates', null, false);
+    if ($boolValue)
+    {
+      $dataToChange = $model->getChanges();
+      $status = $dataToChange['status'] ?? null;
+      if($status == Status::INPROGRESS) $data['start_date'] = now(); // In Progress State
+      else if($status == Status::COMPLETED) $data['end_date'] = now(); // Completed State
+
+      if($status == Status::INPROGRESS || $status == Status::COMPLETED) $model->update((array)$data);
+    }
   }
 }

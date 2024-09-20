@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 //Model
 use Modules\Core\Icrud\Controllers\BaseCrudController;
 use Modules\Ibooking\Entities\Resource;
+use Modules\Ibooking\Entities\Status;
 use Modules\Ibooking\Repositories\ResourceRepository;
 
 class AvailabilityApiController extends BaseCrudController
@@ -62,7 +63,7 @@ class AvailabilityApiController extends BaseCrudController
           'filter' => [
             'status' => [
               'where' => 'notIn',
-              'value' => [2] //Ignore only canceled
+              'value' => [Status::CANCELED] //Ignore only canceled
             ]
           ]
         ];
