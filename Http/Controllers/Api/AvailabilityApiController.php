@@ -91,7 +91,7 @@ class AvailabilityApiController extends BaseCrudController
             //Obtiene shifts por resources
             $shifts = $resource->schedule->getShifts([
                 'shiftTime' => $totalShiftTime ?? 30,
-                'dateRange' => isset($params->date) ? [$params->date] : [],
+                'dateRange' => isset($params->date) ? (array)$params->date : [],
                 'timeRange' => isset($params->time) && ! is_null($params->time) ? $params->time : [],
                 'busyShifts' => $busyShifts,
             ]);
@@ -103,7 +103,9 @@ class AvailabilityApiController extends BaseCrudController
         }
 
         // Collect Response
-        $response = collect($response)->sortBy([['calendarDate', 'asc'], ['dayId', 'asc'], ['startTime', 'asc']]);
+        $response = collect($response)->filter(function ($item) {
+          return !$item['isBusy'];
+        })->sortBy([['calendarDate', 'asc'], ['dayId', 'asc'], ['startTime', 'asc']]);
 
         return $response;
     }
