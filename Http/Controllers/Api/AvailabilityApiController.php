@@ -105,7 +105,7 @@ class AvailabilityApiController extends BaseCrudController
         // Collect Response
         $response = collect($response)->filter(function ($item) {
           return !$item['isBusy'];
-        })->sortBy([['calendarDate', 'asc'], ['dayId', 'asc'], ['startTime', 'asc']]);
+        })->values()->sortBy([['calendarDate', 'asc'], ['dayId', 'asc'], ['startTime', 'asc']]);
 
         return $response;
     }
