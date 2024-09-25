@@ -21,8 +21,7 @@ class ReservationItem extends CrudModel
 
   public $modelRelations = [
     'reservation' => 'belongsTo',
-    'service' => 'belongsTo',
-    'resource' => 'belongsTo',
+    'service' => 'belongsTo'
   ];
 
   protected $table = 'ibooking__reservation_items';
