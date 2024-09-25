@@ -12,6 +12,10 @@ return new class extends Migration {
     Schema::table('ibooking__reservations', function (Blueprint $table) {
       $table->timestamp('end_date')->nullable()->after('status');
       $table->timestamp('start_date')->nullable()->after('status');
+
+      $table->integer('resource_id')->unsigned()->nullable()->after('status');
+      $table->foreign('resource_id')->references('id')->on('ibooking__resources');
+      $table->string('resource_title')->nullable()->after('status');
     });
     Schema::table('ibooking__reservation_items', function (Blueprint $table) {
       $table->integer('shift_time')->default(30)->nullable()->after('price');

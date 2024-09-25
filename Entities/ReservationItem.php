@@ -30,11 +30,9 @@ class ReservationItem extends CrudModel
   protected $fillable = [
     'reservation_id',
     'service_id',
-    'resource_id',
     'category_id',
     'category_title',
     'service_title',
-    'resource_title',
     'price',
     'customer_id',
     'entity_type',
@@ -55,11 +53,6 @@ class ReservationItem extends CrudModel
   public function service()
   {
     return $this->belongsTo(Service::class);
-  }
-
-  public function resource()
-  {
-    return $this->belongsTo(Resource::class);
   }
 
   public function customer()
