@@ -43,5 +43,25 @@ class IbookingMoveValuesRIToReservationSeeder extends Seeder
         $table->dropColumn(['end_date']);
       });
     }
+
+    // Run only if table ibooking__reservation_items still have the column resource_id
+    if (Schema::hasColumn('ibooking__reservation_items', 'resource_id')) {
+      $reservationItems = \DB::table('ibooking__reservation_items')->get();
+      //Map each Reservation Item
+      foreach ($reservationItems as $item) {
+        //---- Move the resource id and title to Reservation form his reservation item
+        Reservation::where('id', $item->reservation_id)->update([
+          'resource_id' => $item->resource_id,
+          'resource_title' => $item->resource_title
+        ]);
+      }
+
+      //---- Remove the resource id and title columns from reservation items
+      Schema::table('ibooking__reservation_items', function ($table) {
+        $table->dropForeign(['resource_id']);
+        $table->dropColumn(['resource_id']);
+        $table->dropColumn(['resource_title']);
+      });
+    }
   }
 }

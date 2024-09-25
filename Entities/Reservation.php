@@ -33,6 +33,8 @@ class Reservation extends CrudModel
   protected $fillable = [
     'customer_id',
     'status',
+    'resource_id',
+    'resource_title',
     'start_date',
     'end_date',
     'options',
@@ -80,5 +82,10 @@ class Reservation extends CrudModel
   public function getHumanShiftTimeAttribute()
   {
     return humanizeDuration($this->start_date, $this->end_date);
+  }
+
+  public function resource()
+  {
+    return $this->belongsTo(Resource::class);
   }
 }
