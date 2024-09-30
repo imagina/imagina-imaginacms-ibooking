@@ -54,6 +54,12 @@ class ReservationService
         // If no exist is 0 (Pending)
         $reservationData['status'] = (int) setting('ibooking::reservationStatusDefault', null, 0);
 
+        //Add resource Id
+        $resourceId = $data['resource_id'] ?? $data['items'][0]['resource_id'];
+        $resource = app("Modules\Ibooking\Repositories\ResourceRepository")->find($resourceId);
+        $reservationData['resource_id'] = $resource->id;
+        $reservationData['resource_title'] = $resource->title;
+
         //\Log::info("Ibooking: Services|ReservationService|Create|reservationData ".json_encode($reservationData));
         $reservationRepository = app('Modules\Ibooking\Repositories\ReservationRepository');
 
@@ -98,17 +104,6 @@ class ReservationService
 
             // Added service
             $response['service'] = $service;
-        }
-
-        if (isset($item['resource_id'])) {
-            $resource = app("Modules\Ibooking\Repositories\ResourceRepository")->find($item['resource_id']);
-            $reservationItem['resource_id'] = $resource->id;
-            $reservationItem['resource_title'] = $resource->title;
-            $reservationItem['organization_id'] = $resource->organization_id ?? null;
-
-            //OJO CAMBIO A REVISAR
-            $reservationItem['entity_type'] = "Modules\Ibooking\Entities\Resource";
-            $reservationItem['entity_id'] = $resource->id;
         }
 
         if (isset($item['category_id'])) {
