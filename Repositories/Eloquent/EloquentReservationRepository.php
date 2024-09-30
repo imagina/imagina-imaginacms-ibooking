@@ -13,7 +13,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
    *
    * @var array
    */
-  protected $replaceFilters = [];
+  protected $replaceFilters = ['resourceId'];
 
   /**
    * Filter query
@@ -31,11 +31,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     //Filter by resource
     if (isset($filter->resourceId)) {
       $resorceId = is_array($filter->resourceId) ? $filter->resourceId : [$filter->resourceId];
-      if (count($resorceId)) {
-        $query->whereHas('items', function ($query) use ($resorceId) {
-          $query->whereIn('resource_id', $resorceId);
-        });
-      }
+      if (count($resorceId)) $query->whereIn('resource_id', $resorceId);
     }
 
     //Filter by service
@@ -64,14 +60,13 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
   public function afterUpdate(&$model, &$data)
   {
     $boolValue = (bool)setting('ibooking::allowChangeAutomaticDates', null, false);
-    if ($boolValue)
-    {
+    if ($boolValue) {
       $dataToChange = $model->getChanges();
       $status = $dataToChange['status'] ?? null;
-      if($status == Status::INPROGRESS) $data['start_date'] = now(); // In Progress State
-      else if($status == Status::COMPLETED) $data['end_date'] = now(); // Completed State
+      if ($status == Status::INPROGRESS) $data['start_date'] = now(); // In Progress State
+      else if ($status == Status::COMPLETED) $data['end_date'] = now(); // Completed State
 
-      if($status == Status::INPROGRESS || $status == Status::COMPLETED) $model->update((array)$data);
+      if ($status == Status::INPROGRESS || $status == Status::COMPLETED) $model->update((array)$data);
     }
   }
 }
