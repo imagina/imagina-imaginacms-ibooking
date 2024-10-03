@@ -10,6 +10,7 @@ class ReservationItem extends CrudModel
 {
   use WithMeeting, isFillable;
 
+  public $forceDeleting = true;
   public $transformer = 'Modules\Ibooking\Transformers\ReservationItemTransformer';
 
   public $repository = 'Modules\Ibooking\Repositories\ReservationItemRepository';

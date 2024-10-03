@@ -5,6 +5,7 @@ namespace Modules\Ibooking\Repositories\Eloquent;
 use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 use Modules\Ibooking\Entities\Status;
 use Modules\Ibooking\Repositories\ReservationRepository;
+use Modules\Ibooking\Entities\ReservationItem;
 
 class EloquentReservationRepository extends EloquentCrudRepository implements ReservationRepository
 {
@@ -59,6 +60,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
 
   public function afterUpdate(&$model, &$data)
   {
+    //Change the start/end dates with the status change
     $boolValue = (bool)setting('ibooking::allowChangeAutomaticDates', null, false);
     if ($boolValue) {
       $dataToChange = $model->getChanges();
@@ -67,6 +69,30 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       else if ($status == Status::COMPLETED) $data['end_date'] = now(); // Completed State
 
       if ($status == Status::INPROGRESS || $status == Status::COMPLETED) $model->update((array)$data);
+    }
+
+    // Changes the reservation items
+    if (isset($data['change_services'])) {
+      $servicesRepository = app('Modules\Ibooking\Repositories\ServiceRepository');
+      $services = $servicesRepository->with(['category'])->whereIn('id', $data['change_services'])->get();
+      $newReservationItems = [];
+      foreach ($services as $service) {
+        $newReservationItems[] = [
+          'reservation_id' => $model->id,
+          'service_id' => $service->id,
+          'category_id' => $service->category_id,
+          'category_title' => $service->category->title,
+          'service_title' => $service->title,
+          'price' => $service->price,
+          'customer_id' => $model->customer_id,
+          'shift_time' => $service->shift_time,
+        ];
+      }
+
+      // Remove current items (ensure all related items are deleted)
+      ReservationItem::where('reservation_id', $model->id)->forceDelete();
+      //Insert the new items
+      $model->items()->insert($newReservationItems);
     }
   }
 }
