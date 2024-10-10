@@ -17,59 +17,60 @@ use Modules\Iqreable\Traits\IsQreable;
 
 class Resource extends CrudModel
 {
-    use Translatable, Schedulable, MediaRelation, Meetingable, BelongsToTenant, IsQreable;
+  use Translatable, Schedulable, MediaRelation, Meetingable, BelongsToTenant, IsQreable;
 
-    public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
+  public $transformer = 'Modules\Ibooking\Transformers\ResourceTransformer';
 
-    public $repository = 'Modules\Ibooking\Repositories\ResourceRepository';
+  public $repository = 'Modules\Ibooking\Repositories\ResourceRepository';
 
-    public $requestValidation = [
-        'create' => 'Modules\Ibooking\Http\Requests\CreateResourceRequest',
-        'update' => 'Modules\Ibooking\Http\Requests\UpdateResourceRequest',
-    ];
+  public $requestValidation = [
+    'create' => 'Modules\Ibooking\Http\Requests\CreateResourceRequest',
+    'update' => 'Modules\Ibooking\Http\Requests\UpdateResourceRequest',
+  ];
 
-    protected $table = 'ibooking__resources';
+  protected $table = 'ibooking__resources';
 
-    public $translatedAttributes = ['title', 'description', 'slug'];
+  public $translatedAttributes = ['title', 'description', 'slug'];
 
-    protected $casts = ['options' => 'array'];
+  protected $casts = ['options' => 'array'];
 
-    protected $fillable = [
-        'status',
-        'options',
-    ];
+  protected $fillable = [
+    'status',
+    'options',
+    'assigned_to_id'
+  ];
 
-    public $modelRelations = [
-        'assignedTo' => 'belongsTo',
-        'services' => 'belongsToMany',
-    ];
+  public $modelRelations = [
+    'assignedTo' => 'belongsTo',
+    'services' => 'belongsToMany',
+  ];
 
-    public $dispatchesEventsWithBindings = [
-        'created' => [
-            [
-                'path' => 'Modules\Igamification\Events\ActivityWasCompleted',
-                'extraData' => ['systemNameActivity' => 'availability-organize'],
-            ],
-        ],
-    ];
+  public $dispatchesEventsWithBindings = [
+    'created' => [
+      [
+        'path' => 'Modules\Igamification\Events\ActivityWasCompleted',
+        'extraData' => ['systemNameActivity' => 'availability-organize'],
+      ],
+    ],
+  ];
 
-    /**
-     * Relation many to many with services
-     *
-     * @return mixed
-     */
-    public function services()
-    {
-        return $this->belongsToMany(Service::class, 'ibooking__service_resource');
-    }
+  /**
+   * Relation many to many with services
+   *
+   * @return mixed
+   */
+  public function services()
+  {
+    return $this->belongsToMany(Service::class, 'ibooking__service_resource');
+  }
 
-    /*
-    * Accessors
-    */
-    public function getOptionsAttribute($value)
-    {
-        return json_decode($value);
-    }
+  /*
+  * Accessors
+  */
+  public function getOptionsAttribute($value)
+  {
+    return json_decode($value);
+  }
 
   /*
   * Mutators
@@ -87,9 +88,16 @@ class Resource extends CrudModel
 
     if (!request()->wantsJson() || Str::startsWith(request()->path(), 'api')) {
 
-      $url = tenant_route(request()->getHost(), 'ibooking.resources.show',[$this->id]);
+      $url = tenant_route(request()->getHost(), 'ibooking.resources.show', [$this->id]);
 
     }
     return $url;
+  }
+
+  public function assignedTo()
+  {
+    $driver = config('asgard.user.config.driver');
+
+    return $this->belongsTo("Modules\\User\\Entities\\{$driver}\\User");
   }
 }
