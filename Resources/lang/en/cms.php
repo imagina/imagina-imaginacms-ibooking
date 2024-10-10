@@ -61,4 +61,6 @@ return [
     'reservations' => 'When a user purchases a service it is called a `Reservation` so the application is able to
      identify which service a user reserved next to her resource .',
   ],
+  'resourceValue' => 'Resource value',
+  'resourceValueType' => 'Resource value type'
 ];

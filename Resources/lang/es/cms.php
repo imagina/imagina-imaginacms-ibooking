@@ -61,4 +61,6 @@ return [
     'reservations' => "Cuando un usuario adquiere un servicio se le llama 'Reservación' así la aplicacion es capaz de
     identificar que servicio reservo un usuario junto a su recurso.",
   ],
+  "resourceValue" => "Valor para el recurso",
+  "resourceValueType" => "Tipo de valor para el recurso",
 ];
