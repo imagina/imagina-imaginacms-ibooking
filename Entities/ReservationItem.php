@@ -39,6 +39,11 @@ class ReservationItem extends CrudModel
     'entity_id',
     'status',
     'shift_time',
+    'options'
+  ];
+
+  protected $casts = [
+    'options' => 'array'
   ];
 
   protected $with = ['fields'];

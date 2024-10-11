@@ -101,6 +101,7 @@ class ReservationService
             $reservationItem['service_title'] = $service->title;
             $reservationItem['price'] = $service->price;
             $reservationItem['shift_time'] = $service->shift_time;
+            $reservationItem['options'] = $service->options;
 
             // Added service
             $response['service'] = $service;

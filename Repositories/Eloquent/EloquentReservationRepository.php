@@ -86,6 +86,9 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
           'price' => $service->price,
           'customer_id' => $model->customer_id,
           'shift_time' => $service->shift_time,
+          'options' => json_encode($service->options),
+          'created_at' => now(),
+          'updated_at' => now()
         ];
       }
 

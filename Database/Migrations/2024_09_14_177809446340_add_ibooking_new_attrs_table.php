@@ -19,9 +19,14 @@ return new class extends Migration {
     });
     Schema::table('ibooking__reservation_items', function (Blueprint $table) {
       $table->integer('shift_time')->default(30)->nullable()->after('price');
+      $table->text('options')->nullable()->after('price');
     });
     Schema::table('ibooking__services', function (Blueprint $table) {
       $table->boolean('is_internal')->default(false)->after('shift_time');
+    });
+    Schema::table('ibooking__resources', function (Blueprint $table) {
+      $table->integer('assigned_to_id')->unsigned()->nullable()->after('status');
+      $table->foreign('assigned_to_id')->references('id')->on(config('auth.table', 'users'))->onDelete('cascade');
     });
   }
 
