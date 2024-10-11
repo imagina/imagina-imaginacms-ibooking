@@ -44,6 +44,12 @@ Route::prefix('/ibooking/v1')->group(function (Router $router) {
     'staticEntity' => 'Modules\Ibooking\Entities\Status',
     //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []]
   ]);
+  $router->apiCrud([
+    'module' => 'iwebhooks',
+    'prefix' => 'resource-value-types',
+    'staticEntity' => 'Modules\Ibooking\Entities\ResourceValueType',
+    //'middleware' => ['create' => [], 'index' => [], 'show' => [], 'update' => [], 'delete' => [], 'restore' => []]
+  ]);
 
   // append
 });
