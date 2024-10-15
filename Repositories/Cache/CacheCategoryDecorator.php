@@ -11,6 +11,7 @@ class CacheCategoryDecorator extends BaseCacheCrudDecorator implements CategoryR
     {
         parent::__construct();
         $this->entityName = 'ibooking.categories';
+        $this->tags = ['ibooking.services'];
         $this->repository = $category;
     }
 }

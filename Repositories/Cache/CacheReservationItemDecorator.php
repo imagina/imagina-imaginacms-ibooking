@@ -11,6 +11,7 @@ class CacheReservationItemDecorator extends BaseCacheCrudDecorator implements Re
     {
         parent::__construct();
         $this->entityName = 'ibooking.reservationitems';
+        $this->tags = ["ibooking.reservations"];
         $this->repository = $reservationitem;
     }
 }
