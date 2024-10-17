@@ -6,8 +6,8 @@ use Modules\Core\Icrud\Entities\CrudStaticModel;
 
 class ResourceValueType extends CrudStaticModel
 {
-  const PERCENTAGE = 'percentage';
-  const PRICE = 'price';
+  const PERCENTAGE = 1;
+  const PRICE = 2;
 
   public function __construct()
   {
