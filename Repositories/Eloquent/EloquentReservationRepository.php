@@ -74,7 +74,10 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     // Changes the reservation items
     if (isset($data['change_services'])) {
       $servicesRepository = app('Modules\Ibooking\Repositories\ServiceRepository');
-      $services = $servicesRepository->with(['category'])->whereIn('id', $data['change_services'])->get();
+      $services = $servicesRepository->getItemsBy(json_decode(json_encode([
+        'filter' => ['id' => $data['change_services']],
+        'include' => ['category'],
+      ])));
       $newReservationItems = [];
       foreach ($services as $service) {
         $newReservationItems[] = [
