@@ -18,6 +18,7 @@ return [
     'waitingTimeToCancelReservation' => 'Tiempo de espera (En Minutos) para cancelar una reservación',
     'allowPublicReservation' => 'Permitir reservas publicas',
     'autoUpdateReservationDates' => 'Actualizar fechas de reserva con cambios de estados',
+    'newCustomerRole' => 'Role para nuevos Clientes',
   ],
 
   'settingHints' => [

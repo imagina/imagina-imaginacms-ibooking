@@ -18,6 +18,7 @@ return [
     'waitingTimeToCancelReservation' => 'WaitingTime (in Minutes) to cancel reservation',
     'allowPublicReservation' => 'Allow public reservations',
     'autoUpdateReservationDates' => 'Update reservation dates with status changes',
+    'newCustomerRole' => 'New Customer Role',
   ],
 
   'settingHints' => [
