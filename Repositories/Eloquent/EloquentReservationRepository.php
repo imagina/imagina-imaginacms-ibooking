@@ -6,6 +6,7 @@ use Modules\Core\Icrud\Repositories\Eloquent\EloquentCrudRepository;
 use Modules\Ibooking\Entities\Status;
 use Modules\Ibooking\Repositories\ReservationRepository;
 use Modules\Ibooking\Entities\ReservationItem;
+use Carbon\Carbon;
 
 class EloquentReservationRepository extends EloquentCrudRepository implements ReservationRepository
 {
@@ -107,12 +108,21 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     $response = [];
     // Get the current application language
     $currentLanguage = \App::getLocale();
+    //Get filters
+    $filter = $params->filter;
+    // get date range
+    $startDate = $filter->date->from ?? Carbon::today();
+    $endDate = $filter->date->to ?? Carbon::today();
 
     //------------ Get services information
     $totalServices = ReservationItem::with('service.translations')
       ->select('service_id', \DB::raw('count(*) as quantity'), \DB::raw('sum(price) as total'))
+      ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
+        $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
+      })
       ->groupBy('service_id')
       ->get();
+
     //Map data
     $response['services'] = $totalServices->map(function ($item) {
       return [
@@ -124,7 +134,9 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
 
     //------------ Get reservations information
     $response['reservations'] = [
-      'quantity' => $this->model->count(),
+      'quantity' => $this->model->where(function ($query) use ($startDate, $endDate) {
+        $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
+      })->count(),
       'total' => $response['services']->sum('total'),
     ];
 
@@ -142,6 +154,10 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       ->join('ibooking__resource_translations', function ($join) use ($currentLanguage) {
         $join->on('ibooking__reservations.resource_id', '=', 'ibooking__resource_translations.resource_id')
           ->where('ibooking__resource_translations.locale', '=', $currentLanguage); // Filter by current language
+      })
+      ->where(function ($query) use ($startDate, $endDate) {
+        $query->whereDate('ibooking__reservations.start_date', '>=', $startDate)
+          ->whereDate('ibooking__reservations.start_date', '<=', $endDate);
       })
       ->groupBy(
         'ibooking__reservations.resource_id',
