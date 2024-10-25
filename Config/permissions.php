@@ -33,6 +33,7 @@ return [
         'destroy' => 'ibooking::reservations.destroy resource',
         'manage' => 'ibooking::reservations.manage resource',
         'restore' => 'ibooking::reservations.restore resource',
+        'dashboard' => 'ibooking::reservations.dashboard resource',
     ],
     'ibooking.reservationitems' => [
         'index' => 'ibooking::reservationitems.list resource',

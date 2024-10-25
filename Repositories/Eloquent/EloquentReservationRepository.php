@@ -101,4 +101,66 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       $model->items()->insert($newReservationItems);
     }
   }
+
+  public function getDashboard($params)
+  {
+    $response = [];
+    // Get the current application language
+    $currentLanguage = \App::getLocale();
+
+    //------------ Get services information
+    $totalServices = ReservationItem::with('service.translations')
+      ->select('service_id', \DB::raw('count(*) as quantity'), \DB::raw('sum(price) as total'))
+      ->groupBy('service_id')
+      ->get();
+    //Map data
+    $response['services'] = $totalServices->map(function ($item) {
+      return [
+        'service' => $item->service->title,
+        'quantity' => $item->quantity,
+        'total' => $item->total,
+      ];
+    });
+
+    //------------ Get reservations information
+    $response['reservations'] = [
+      'quantity' => $this->model->count(),
+      'total' => $response['services']->sum('total'),
+    ];
+
+
+    //------------ Get services by resource
+    $totalResources = ReservationItem::with(['service.translations'])
+      ->select(
+        'ibooking__reservations.resource_id',
+        'ibooking__reservation_items.service_id',
+        'ibooking__resource_translations.title as resource_title',
+        \DB::raw('count(*) as quantity'),
+        \DB::raw('sum(price) as total')
+      )
+      ->join('ibooking__reservations', 'ibooking__reservation_items.reservation_id', '=', 'ibooking__reservations.id')
+      ->join('ibooking__resource_translations', function ($join) use ($currentLanguage) {
+        $join->on('ibooking__reservations.resource_id', '=', 'ibooking__resource_translations.resource_id')
+          ->where('ibooking__resource_translations.locale', '=', $currentLanguage); // Filter by current language
+      })
+      ->groupBy(
+        'ibooking__reservations.resource_id',
+        'ibooking__reservation_items.service_id',
+        'ibooking__resource_translations.title'
+      )
+      ->get();
+
+    //Map the data
+    $response["serviceByResource"] = [];
+    foreach ($totalResources as $item) {
+      $response["serviceByResource"][$item->resource_title][] = [
+        'service' => $item->service->title,
+        'quantity' => $item->quantity,
+        'total' => $item->total,
+      ];
+    }
+
+    //Response
+    return $response;
+  }
 }
