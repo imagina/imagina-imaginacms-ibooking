@@ -101,6 +101,10 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       //Insert the new items
       $model->items()->saveMany($newReservationItems);
     }
+
+    //update resource title
+    $resource = app("Modules\Ibooking\Repositories\ResourceRepository")->find($model->resource_id);
+    $model->update(['resource_title' => $resource->title]);
   }
 
   public function getDashboard($params)
@@ -118,7 +122,9 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     $response['reservationsByCategory'] = $totalByCategory = ReservationItem::select('category_title')
       ->selectRaw('SUM(price) as totalPrice, COUNT(DISTINCT reservation_id) as quantity')
       ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
-        $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
+        $query->whereDate('start_date', '>=', $startDate)
+          ->whereDate('start_date', '<=', $endDate)
+          ->whereNull('deleted_at');
       })
       ->groupBy('category_title')
       ->get()
@@ -142,7 +148,9 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       \DB::raw('count(*) as quantity'),
       \DB::raw('sum(price) as total'))
       ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
-        $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
+        $query->whereDate('start_date', '>=', $startDate)
+          ->whereDate('start_date', '<=', $endDate)
+          ->whereNull('deleted_at');
       })
       ->groupBy('service_title')
       ->get()
@@ -169,6 +177,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       })
       ->whereDate('ibooking__reservations.start_date', '>=', $startDate)
       ->whereDate('ibooking__reservations.start_date', '<=', $endDate)
+      ->whereNull('ibooking__reservations.deleted_at')
       ->groupBy(
         'ibooking__reservations.resource_id',
         'ibooking__reservation_items.service_title',
@@ -186,6 +195,23 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
         });
       });
 
+    //------------ Get Reservations by resource
+    $response["reservationsByResource"] = $this->model->selectRaw(
+      'resource_title, count(*) as quantity'
+    )
+      ->whereDate('start_date', '>=', $startDate)
+      ->whereDate('start_date', '<=', $endDate)
+      ->whereNull('deleted_at')
+      ->groupBy('resource_title')
+      ->get()
+      ->mapWithKeys(function ($item) {
+        return [
+          $item->resource_title => [
+            'resource_title' => $item->resource_title,
+            'quantity' => $item->quantity,
+          ],
+        ];
+      });
 
     //Response
     return $response;
