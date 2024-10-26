@@ -81,7 +81,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       ])));
       $newReservationItems = [];
       foreach ($services as $service) {
-        $newReservationItems[] = [
+        $newReservationItems[] = new ReservationItem([
           'reservation_id' => $model->id,
           'service_id' => $service->id,
           'category_id' => $service->category_id,
@@ -90,16 +90,16 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
           'price' => $service->price,
           'customer_id' => $model->customer_id,
           'shift_time' => $service->shift_time,
-          'options' => json_encode($service->options),
+          'options' => $service->options,
           'created_at' => now(),
           'updated_at' => now()
-        ];
+        ]);
       }
 
       // Remove current items (ensure all related items are deleted)
       ReservationItem::where('reservation_id', $model->id)->forceDelete();
       //Insert the new items
-      $model->items()->insert($newReservationItems);
+      $model->items()->saveMany($newReservationItems);
     }
   }
 
@@ -148,7 +148,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
         'ibooking__reservation_items.service_id',
         'ibooking__resource_translations.title as resource_title',
         \DB::raw('count(*) as quantity'),
-        \DB::raw('sum(price) as total')
+        \DB::raw('sum(resource_price) as total')
       )
       ->join('ibooking__reservations', 'ibooking__reservation_items.reservation_id', '=', 'ibooking__reservations.id')
       ->join('ibooking__resource_translations', function ($join) use ($currentLanguage) {

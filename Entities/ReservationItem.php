@@ -34,6 +34,7 @@ class ReservationItem extends CrudModel
     'category_title',
     'service_title',
     'price',
+    'resource_price',
     'customer_id',
     'entity_type',
     'entity_id',
@@ -47,6 +48,16 @@ class ReservationItem extends CrudModel
   ];
 
   protected $with = ['fields'];
+
+  // Boot
+  public static function boot()
+  {
+    parent::boot();
+
+    static::saving(function ($model) {
+      $model->resource_price = $model->calculateResourcePrice();
+    });
+  }
 
   //============== RELATIONS ==============//
 
@@ -119,5 +130,20 @@ class ReservationItem extends CrudModel
       ],
     ];
 
+  }
+
+  public function calculateResourcePrice()
+  {
+    $resourcePrice = 0;
+
+    //Calculate resourceItemPrice
+    if (isset($this->options['resourceValueType']) && isset($this->options['resourceValue'])) {
+      //calculate the amount for the resource
+      $resourcePrice = $this->options['resourceValueType'] == ResourceValueType::PRICE ? $this->options['resourceValue'] :
+        (($this->price * $this->options['resourceValue']) / 100);
+    }
+
+    // Assign calculated resource price
+    return $resourcePrice;
   }
 }
