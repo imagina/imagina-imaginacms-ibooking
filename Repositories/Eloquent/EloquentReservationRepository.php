@@ -35,7 +35,6 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       $resorceId = is_array($filter->resourceId) ? $filter->resourceId : [$filter->resourceId];
       if (count($resorceId)) $query->whereIn('resource_id', $resorceId);
     }
-
     //Filter by service
     if (isset($filter->serviceId)) {
       $serviceId = is_array($filter->serviceId) ? $filter->serviceId : [$filter->serviceId];
@@ -53,6 +52,10 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
           $query->whereIn('category_id', $categoryId);
         });
       }
+    }
+    //Filter by category
+    if (isset($filter->activeReservations)) {
+      $query->whereNotIn('status', [Status::CANCELED]);
     }
 
     //Response
