@@ -114,67 +114,78 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     $startDate = $filter->date->from ?? Carbon::today();
     $endDate = $filter->date->to ?? Carbon::today();
 
-    //------------ Get services information
-    $totalServices = ReservationItem::with('service.translations')
-      ->select('service_id', \DB::raw('count(*) as quantity'), \DB::raw('sum(price) as total'))
+    //------------ Get the reservation by category
+    $response['reservationsByCategory'] = $totalByCategory = ReservationItem::select('category_title')
+      ->selectRaw('SUM(price) as totalPrice, COUNT(DISTINCT reservation_id) as quantity')
       ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
         $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
       })
-      ->groupBy('service_id')
-      ->get();
-
-    //Map data
-    $response['services'] = $totalServices->map(function ($item) {
-      return [
-        'service' => $item->service->title,
-        'quantity' => $item->quantity,
-        'total' => $item->total,
-      ];
-    });
+      ->groupBy('category_title')
+      ->get()
+      ->map(function ($item) {
+        return [
+          'category' => $item->category_title,
+          'quantity' => $item->quantity,
+          'total' => $item->totalPrice,
+        ];
+      });
 
     //------------ Get reservations information
     $response['reservations'] = [
-      'quantity' => $this->model->where(function ($query) use ($startDate, $endDate) {
-        $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
-      })->count(),
-      'total' => $response['services']->sum('total'),
+      'quantity' => $response['reservationsByCategory']->sum('quantity'),
+      'total' => $response['reservationsByCategory']->sum('total'),
     ];
 
+    //------------ Get services information
+    $response['services'] = ReservationItem::select(
+      'service_title',
+      \DB::raw('count(*) as quantity'),
+      \DB::raw('sum(price) as total'))
+      ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
+        $query->whereDate('start_date', '>=', $startDate)->whereDate('start_date', '<=', $endDate);
+      })
+      ->groupBy('service_title')
+      ->get()
+      ->map(function ($item) {
+        return [
+          'service' => $item->service_title,
+          'quantity' => $item->quantity,
+          'total' => $item->total,
+        ];
+      })->toArray();
 
     //------------ Get services by resource
-    $totalResources = ReservationItem::with(['service.translations'])
-      ->select(
-        'ibooking__reservations.resource_id',
-        'ibooking__reservation_items.service_id',
-        'ibooking__resource_translations.title as resource_title',
-        \DB::raw('count(*) as quantity'),
-        \DB::raw('sum(resource_price) as total')
-      )
+    $response["serviceByResource"] = ReservationItem::select(
+      'ibooking__reservations.resource_id',
+      'ibooking__reservation_items.service_title',
+      'ibooking__resource_translations.title as resource_title',
+      \DB::raw('count(*) as quantity'),
+      \DB::raw('sum(resource_price) as total')
+    )
       ->join('ibooking__reservations', 'ibooking__reservation_items.reservation_id', '=', 'ibooking__reservations.id')
       ->join('ibooking__resource_translations', function ($join) use ($currentLanguage) {
         $join->on('ibooking__reservations.resource_id', '=', 'ibooking__resource_translations.resource_id')
-          ->where('ibooking__resource_translations.locale', '=', $currentLanguage); // Filter by current language
+          ->where('ibooking__resource_translations.locale', '=', $currentLanguage);
       })
-      ->where(function ($query) use ($startDate, $endDate) {
-        $query->whereDate('ibooking__reservations.start_date', '>=', $startDate)
-          ->whereDate('ibooking__reservations.start_date', '<=', $endDate);
-      })
+      ->whereDate('ibooking__reservations.start_date', '>=', $startDate)
+      ->whereDate('ibooking__reservations.start_date', '<=', $endDate)
       ->groupBy(
         'ibooking__reservations.resource_id',
-        'ibooking__reservation_items.service_id',
+        'ibooking__reservation_items.service_title',
         'ibooking__resource_translations.title'
       )
-      ->get();
+      ->get()
+      ->groupBy('resource_title')
+      ->map(function ($items) {
+        return $items->map(function ($item) {
+          return [
+            'service' => $item->service_title,
+            'quantity' => $item->quantity,
+            'total' => $item->total,
+          ];
+        });
+      });
 
-    //Map the data
-    $response["serviceByResource"] = [];
-    foreach ($totalResources as $item) {
-      $response["serviceByResource"][$item->resource_title][] = [
-        'service' => $item->service->title,
-        'quantity' => $item->quantity,
-        'total' => $item->total,
-      ];
-    }
 
     //Response
     return $response;
