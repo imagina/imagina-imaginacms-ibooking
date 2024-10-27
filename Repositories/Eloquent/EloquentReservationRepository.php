@@ -120,6 +120,8 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     // get date range
     $startDate = $filter->date->from ?? Carbon::today();
     $endDate = $filter->date->to ?? Carbon::today();
+    //Define Status call
+    $statusModel = new Status();
 
     //------------ Get the reservation by category
     $response['reservationsByCategory'] = $totalByCategory = ReservationItem::select('category_title')
@@ -127,7 +129,8 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
         $query->whereDate('start_date', '>=', $startDate)
           ->whereDate('start_date', '<=', $endDate)
-          ->whereNull('deleted_at');
+          ->whereNull('deleted_at')
+          ->where('status', Status::COMPLETED);
       })
       ->groupBy('category_title')
       ->get()
@@ -153,7 +156,8 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
         $query->whereDate('start_date', '>=', $startDate)
           ->whereDate('start_date', '<=', $endDate)
-          ->whereNull('deleted_at');
+          ->whereNull('deleted_at')
+          ->where('status', Status::COMPLETED);
       })
       ->groupBy('service_title')
       ->get()
@@ -181,6 +185,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       ->whereDate('ibooking__reservations.start_date', '>=', $startDate)
       ->whereDate('ibooking__reservations.start_date', '<=', $endDate)
       ->whereNull('ibooking__reservations.deleted_at')
+      ->where('ibooking__reservations.status', Status::COMPLETED)
       ->groupBy(
         'ibooking__reservations.resource_id',
         'ibooking__reservation_items.service_title',
@@ -205,6 +210,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       ->whereDate('start_date', '>=', $startDate)
       ->whereDate('start_date', '<=', $endDate)
       ->whereNull('deleted_at')
+      ->where('status', Status::COMPLETED)
       ->groupBy('resource_title')
       ->get()
       ->mapWithKeys(function ($item) {
@@ -214,6 +220,28 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
             'quantity' => $item->quantity,
           ],
         ];
+      });
+
+    //------------ Get Reservations by category an status
+    $response["statusByCategory"] = $this->model
+      ->select(
+        'ibooking__reservation_items.category_title',
+        'ibooking__reservations.status',
+        \DB::raw('COUNT(DISTINCT ibooking__reservations.id) as quantity'),
+        \DB::raw('SUM(ibooking__reservation_items.price) as total')
+      )
+      ->join('ibooking__reservation_items', 'ibooking__reservations.id', '=', 'ibooking__reservation_items.reservation_id')
+      ->groupBy('ibooking__reservations.status', 'ibooking__reservation_items.category_title')
+      ->get()
+      ->groupBy('category_title')
+      ->map(function ($items) use ($statusModel) {
+        return $items->map(function ($item) use ($statusModel) {
+          return [
+            'status' => $statusModel->show($item->status),
+            'quantity' => $item->quantity,
+            'total' => $item->total,
+          ];
+        });
       });
 
     //Response

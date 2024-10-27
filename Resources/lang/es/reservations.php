@@ -28,7 +28,7 @@ return [
 
     'status' => [
         'pending' => 'Pendiente',
-        'approved' => 'Aprobada',
+        'approved' => 'Reservado',
         'canceled' => 'Cancelada',
         'inProgress' => 'En progreso',
         'completed' => 'Completado',

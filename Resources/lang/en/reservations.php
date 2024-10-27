@@ -26,7 +26,7 @@ return [
 
     'status' => [
         'pending' => 'Pending',
-        'approved' => 'Approved',
+        'approved' => 'Reserved',
         'canceled' => 'Canceled',
         'inProgress' => 'In progress',
         'completed' => 'Completed',
