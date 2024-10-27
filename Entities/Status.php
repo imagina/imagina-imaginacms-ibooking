@@ -54,7 +54,12 @@ class Status extends CrudStaticModel
     // Replace nextStatus with full status records
     foreach ($records as $status => &$details) {
       $details['nextStatus'] = array_map(function ($nextStatus) use ($records) {
-        return $records[$nextStatus]; // Replace status with full record
+        // Get the full record for the next status
+        $nextStatusRecord = $records[$nextStatus];
+        // Remove 'nextStatus' key to avoid recursion
+        unset($nextStatusRecord['nextStatus']);
+        //Response
+        return $nextStatusRecord;
       }, $details['nextStatus']);
     }
     //Set records

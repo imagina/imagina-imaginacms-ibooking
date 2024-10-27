@@ -95,23 +95,17 @@ class Reservation extends CrudModel
   {
     $reservationPrice = 0;
     $response = [];
-    $resourceTypeValueClass = new ResourceValueType();
 
     //Define transaction data by service
     foreach ($this->items as $item) {
       $reservationPrice += $item->price;
-      if (isset($item->options['resourceValueType']) && isset($item->options['resourceValue'])) {
-        //calculate the amount for the resource
-        $amount = $item->options['resourceValueType'] == ResourceValueType::PRICE ? $item->options['resourceValue'] :
-          (($item->price * $item->options['resourceValue']) / 100);
-        //Get the resource value type model
-        $resourceValueTypeTitle = $resourceTypeValueClass->show($item->options['resourceValueType'])["title"];
+      if ($item->resource_price) {
         //Instance the transaction data
         $response[] = [
-          "amount" => $amount * -1,
+          "amount" => $item->resource_price,
           "comment" => "Booking:{$this->id}|{$item->service_title} / " .
-            trans("ibooking::common.customer") . ":{$this->customer->id}|{$this->customer->first_name} {$this->customer->last_name} / " .
-            $resourceValueTypeTitle . "|{$item->options['resourceValue']}",
+            trans("ibooking::common.customer") . ":{$this->customer->id}|{$this->customer->first_name} {$this->customer->last_name}",
+          "pocketType" => 'from',
           "pocket" => [
             "entity_type" => Resource::class,
             "entity_id" => $this->resource_id,
