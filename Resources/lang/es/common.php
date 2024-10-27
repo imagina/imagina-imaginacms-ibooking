@@ -36,5 +36,6 @@ return [
   'percentage' => 'Porcentaje',
   'price' => 'Precio',
   'customer' => "Cliente",
-  'resource' => "Recurso"
+  'resource' => "Recurso",
+  "reportOfCompleted" => "Este reporte solo muestra la información de las reservas <b>completadas</b>"
 ];

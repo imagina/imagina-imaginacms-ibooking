@@ -37,4 +37,5 @@ return [
   'price' => 'Price',
   'customer' => "Customer",
   'resource' => "Resource",
+  "reportOfCompleted" => "This report only shows information for <b>completed</b> reservations"
 ];

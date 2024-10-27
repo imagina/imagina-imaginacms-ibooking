@@ -124,125 +124,145 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     $statusModel = new Status();
 
     //------------ Get the reservation by category
-    $response['reservationsByCategory'] = $totalByCategory = ReservationItem::select('category_title')
-      ->selectRaw('SUM(price) as totalPrice, COUNT(DISTINCT reservation_id) as quantity')
-      ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
-        $query->whereDate('start_date', '>=', $startDate)
-          ->whereDate('start_date', '<=', $endDate)
-          ->whereNull('deleted_at')
-          ->where('status', Status::COMPLETED);
-      })
-      ->groupBy('category_title')
-      ->get()
-      ->map(function ($item) {
-        return [
-          'category' => $item->category_title,
-          'quantity' => $item->quantity,
-          'total' => $item->totalPrice,
-        ];
-      });
+    $response['reservationsByCategory'] = [
+      "description" => trans('ibooking::common.reportOfCompleted'),
+      "data" => $totalByCategory = ReservationItem::select('category_title')
+        ->selectRaw('SUM(price) as totalPrice, COUNT(DISTINCT reservation_id) as quantity')
+        ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
+          $query->whereDate('start_date', '>=', $startDate)
+            ->whereDate('start_date', '<=', $endDate)
+            ->whereNull('deleted_at')
+            ->where('status', Status::COMPLETED);
+        })
+        ->groupBy('category_title')
+        ->get()
+        ->map(function ($item) {
+          return [
+            'category' => $item->category_title,
+            'quantity' => $item->quantity,
+            'total' => $item->totalPrice,
+          ];
+        })
+    ];
 
     //------------ Get reservations information
     $response['reservations'] = [
-      'quantity' => $response['reservationsByCategory']->sum('quantity'),
-      'total' => $response['reservationsByCategory']->sum('total'),
-    ];
+      "description" => trans('ibooking::common.reportOfCompleted'),
+      "data" => [
+        'quantity' => $response['reservationsByCategory']['data']->sum('quantity'),
+        'total' => $response['reservationsByCategory']['data']->sum('total'),
+      ]];
 
     //------------ Get services information
-    $response['services'] = ReservationItem::select(
-      'service_title',
-      \DB::raw('count(*) as quantity'),
-      \DB::raw('sum(price) as total'))
-      ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
-        $query->whereDate('start_date', '>=', $startDate)
-          ->whereDate('start_date', '<=', $endDate)
-          ->whereNull('deleted_at')
-          ->where('status', Status::COMPLETED);
-      })
-      ->groupBy('service_title')
-      ->get()
-      ->map(function ($item) {
-        return [
-          'service' => $item->service_title,
-          'quantity' => $item->quantity,
-          'total' => $item->total,
-        ];
-      })->toArray();
-
-    //------------ Get services by resource
-    $response["serviceByResource"] = ReservationItem::select(
-      'ibooking__reservations.resource_id',
-      'ibooking__reservation_items.service_title',
-      'ibooking__resource_translations.title as resource_title',
-      \DB::raw('count(*) as quantity'),
-      \DB::raw('sum(resource_price) as total')
-    )
-      ->join('ibooking__reservations', 'ibooking__reservation_items.reservation_id', '=', 'ibooking__reservations.id')
-      ->join('ibooking__resource_translations', function ($join) use ($currentLanguage) {
-        $join->on('ibooking__reservations.resource_id', '=', 'ibooking__resource_translations.resource_id')
-          ->where('ibooking__resource_translations.locale', '=', $currentLanguage);
-      })
-      ->whereDate('ibooking__reservations.start_date', '>=', $startDate)
-      ->whereDate('ibooking__reservations.start_date', '<=', $endDate)
-      ->whereNull('ibooking__reservations.deleted_at')
-      ->where('ibooking__reservations.status', Status::COMPLETED)
-      ->groupBy(
-        'ibooking__reservations.resource_id',
-        'ibooking__reservation_items.service_title',
-        'ibooking__resource_translations.title'
-      )
-      ->get()
-      ->groupBy('resource_title')
-      ->map(function ($items) {
-        return $items->map(function ($item) {
+    $response['services'] = [
+      "description" => trans('ibooking::common.reportOfCompleted'),
+      "data" => ReservationItem::select(
+        'service_title',
+        \DB::raw('count(*) as quantity'),
+        \DB::raw('sum(price) as total'))
+        ->whereHas('reservation', function ($query) use ($startDate, $endDate) {
+          $query->whereDate('start_date', '>=', $startDate)
+            ->whereDate('start_date', '<=', $endDate)
+            ->whereNull('deleted_at')
+            ->where('status', Status::COMPLETED);
+        })
+        ->groupBy('service_title')
+        ->get()
+        ->map(function ($item) {
           return [
             'service' => $item->service_title,
             'quantity' => $item->quantity,
             'total' => $item->total,
           ];
-        });
-      });
+        })->toArray()
+    ];
+
+    //------------ Get services by resource
+    $response["serviceByResource"] = [
+      "description" => trans('ibooking::common.reportOfCompleted'),
+      "data" => ReservationItem::select(
+        'ibooking__reservations.resource_id',
+        'ibooking__reservation_items.service_title',
+        'ibooking__resource_translations.title as resource_title',
+        \DB::raw('count(*) as quantity'),
+        \DB::raw('sum(resource_price) as total')
+      )
+        ->join('ibooking__reservations', 'ibooking__reservation_items.reservation_id', '=', 'ibooking__reservations.id')
+        ->join('ibooking__resource_translations', function ($join) use ($currentLanguage) {
+          $join->on('ibooking__reservations.resource_id', '=', 'ibooking__resource_translations.resource_id')
+            ->where('ibooking__resource_translations.locale', '=', $currentLanguage);
+        })
+        ->whereDate('ibooking__reservations.start_date', '>=', $startDate)
+        ->whereDate('ibooking__reservations.start_date', '<=', $endDate)
+        ->whereNull('ibooking__reservations.deleted_at')
+        ->where('ibooking__reservations.status', Status::COMPLETED)
+        ->groupBy(
+          'ibooking__reservations.resource_id',
+          'ibooking__reservation_items.service_title',
+          'ibooking__resource_translations.title'
+        )
+        ->get()
+        ->groupBy('resource_title')
+        ->map(function ($items) {
+          return $items->map(function ($item) {
+            return [
+              'service' => $item->service_title,
+              'quantity' => $item->quantity,
+              'total' => $item->total,
+            ];
+          });
+        })
+    ];
 
     //------------ Get Reservations by resource
-    $response["reservationsByResource"] = $this->model->selectRaw(
-      'resource_title, count(*) as quantity'
-    )
-      ->whereDate('start_date', '>=', $startDate)
-      ->whereDate('start_date', '<=', $endDate)
-      ->whereNull('deleted_at')
-      ->where('status', Status::COMPLETED)
-      ->groupBy('resource_title')
-      ->get()
-      ->mapWithKeys(function ($item) {
-        return [
-          $item->resource_title => [
-            'resource_title' => $item->resource_title,
-            'quantity' => $item->quantity,
-          ],
-        ];
-      });
+    $response["reservationsByResource"] = [
+      "description" => trans('ibooking::common.reportOfCompleted'),
+      "data" => $this->model->selectRaw(
+        'resource_title, count(*) as quantity'
+      )
+        ->whereDate('start_date', '>=', $startDate)
+        ->whereDate('start_date', '<=', $endDate)
+        ->whereNull('deleted_at')
+        ->where('status', Status::COMPLETED)
+        ->groupBy('resource_title')
+        ->get()
+        ->mapWithKeys(function ($item) {
+          return [
+            $item->resource_title => [
+              'resource_title' => $item->resource_title,
+              'quantity' => $item->quantity,
+            ],
+          ];
+        })
+    ];
 
     //------------ Get Reservations by category an status
-    $response["statusByCategory"] = $this->model
-      ->select(
-        'ibooking__reservation_items.category_title',
-        'ibooking__reservations.status',
-        \DB::raw('COUNT(DISTINCT ibooking__reservations.id) as quantity'),
-        \DB::raw('SUM(ibooking__reservation_items.price) as total')
-      )
-      ->join('ibooking__reservation_items', 'ibooking__reservations.id', '=', 'ibooking__reservation_items.reservation_id')
-      ->groupBy('ibooking__reservations.status', 'ibooking__reservation_items.category_title')
-      ->get()
-      ->groupBy('category_title')
-      ->map(function ($items) use ($statusModel) {
-        return $items->map(function ($item) use ($statusModel) {
-          return [
-            'status' => $statusModel->show($item->status),
-            'quantity' => $item->quantity,
-            'total' => $item->total,
-          ];
-        });
-      });
+    $response["statusByCategory"] = [
+      "description" => '',
+      "data" => $this->model
+        ->select(
+          'ibooking__reservation_items.category_title',
+          'ibooking__reservations.status',
+          \DB::raw('COUNT(DISTINCT ibooking__reservations.id) as quantity'),
+          \DB::raw('SUM(ibooking__reservation_items.price) as total')
+        )
+        ->join('ibooking__reservation_items', 'ibooking__reservations.id', '=', 'ibooking__reservation_items.reservation_id')
+        ->groupBy('ibooking__reservations.status', 'ibooking__reservation_items.category_title')
+        ->whereDate('ibooking__reservations.start_date', '>=', $startDate)
+        ->whereDate('ibooking__reservations.start_date', '<=', $endDate)
+        ->whereNull('ibooking__reservations.deleted_at')
+        ->get()
+        ->groupBy('category_title')
+        ->map(function ($items) use ($statusModel) {
+          return $items->map(function ($item) use ($statusModel) {
+            return [
+              'status' => $statusModel->show($item->status),
+              'quantity' => $item->quantity,
+              'total' => $item->total,
+            ];
+          });
+        })
+    ];
 
     //Response
     return $response;
