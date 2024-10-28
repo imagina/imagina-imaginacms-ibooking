@@ -39,7 +39,7 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
       });
     }
     //Filter by status name
-    if (isset($filter->statusName)) {
+    if (isset($filter->statusName) && defined(Status::class . '::' . $filter->statusName)) {
       $query->where('status', constant(Status::class . '::' . $filter->statusName));
     }
     //Filter by resource
@@ -77,7 +77,9 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
 
   public function beforeUpdate(&$data)
   {
-    if (isset($data["status_name"])) $data["status"] = constant(Status::class . '::' . $data["status_name"]);
+    if (isset($data["status_name"]) && defined(Status::class . '::' . $data["status_name"])) {
+      $data["status"] = constant(Status::class . '::' . $data["status_name"]);
+    }
   }
 
   public function afterUpdate(&$model, &$data)
