@@ -30,6 +30,18 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
      * Example filter Query
      * if (isset($filter->status)) $query->where('status', $filter->status);
      */
+
+    //Limit by index-all permission
+    $hasIndexAll = $params->permissions['ibooking.reservations.index-all'] ?? false;
+    if (!$hasIndexAll) {
+      $query->whereHas('resource', function ($query) {
+        $query->where('assigned_to_id', \Auth::id());
+      });
+    }
+    //Filter by status name
+    if (isset($filter->statusName)) {
+      $query->where('status', constant(Status::class . '::' . $filter->statusName));
+    }
     //Filter by resource
     if (isset($filter->resourceId)) {
       $resorceId = is_array($filter->resourceId) ? $filter->resourceId : [$filter->resourceId];
@@ -60,6 +72,12 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
 
     //Response
     return $query;
+  }
+
+
+  public function beforeUpdate(&$data)
+  {
+    if (isset($data["status_name"])) $data["status"] = constant(Status::class . '::' . $data["status_name"]);
   }
 
   public function afterUpdate(&$model, &$data)
