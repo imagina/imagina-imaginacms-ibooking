@@ -169,8 +169,13 @@ class EloquentReservationRepository extends EloquentCrudRepository implements Re
     $response['reservations'] = [
       "description" => trans('ibooking::common.reportOfCompleted'),
       "data" => [
-        'quantity' => $response['reservationsByCategory']['data']->sum('quantity'),
         'total' => $response['reservationsByCategory']['data']->sum('total'),
+        'completedQuantity' => $response['reservationsByCategory']['data']->sum('quantity'),
+        'quantity' => $this->model->select(\DB::raw('count(*) as total'))
+          ->whereDate('start_date', '>=', $startDate)
+          ->whereDate('start_date', '<=', $endDate)
+          ->whereNull('deleted_at')
+          ->pluck('total')->first(),
       ]];
 
     //------------ Get services information
