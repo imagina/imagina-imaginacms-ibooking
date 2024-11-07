@@ -41,7 +41,7 @@ class Status extends CrudStaticModel
         'title' => trans('ibooking::reservations.status.inProgress'),
         'color' => '#17a2b8', // Light blue (indicating ongoing process)
         'icon' => 'fal fa-spinner', // Spinner indicating in-progress
-        'nextStatus' => [self::COMPLETED, self::CANCELED]
+        'nextStatus' => [self::COMPLETED, self::APPROVED]
       ],
       self::COMPLETED => [
         'id' => self::COMPLETED,
