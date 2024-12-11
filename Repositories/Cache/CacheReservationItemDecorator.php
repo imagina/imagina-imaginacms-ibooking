@@ -3,9 +3,9 @@
 namespace Modules\Ibooking\Repositories\Cache;
 
 use Modules\Ibooking\Repositories\ReservationItemRepository;
-use Modules\Core\Repositories\Cache\BaseCacheDecorator;
+use Modules\Core\Icrud\Repositories\Cache\BaseCacheCrudDecorator;
 
-class CacheReservationItemDecorator extends BaseCacheDecorator implements ReservationItemRepository
+class CacheReservationItemDecorator extends BaseCacheCrudDecorator implements ReservationItemRepository
 {
     public function __construct(ReservationItemRepository $reservationitem)
     {
