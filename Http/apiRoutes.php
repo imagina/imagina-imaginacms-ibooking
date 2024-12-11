@@ -30,6 +30,7 @@ $router->group(['prefix' => '/ibooking/v1'], function (Router $router) {
   $router->apiCrud([
     'module' => 'ibooking',
     'prefix' => 'reservation-items',
+    'permission' => 'ibooking.reservationitems',
     'controller' => 'ReservationItemApiController',
     //'middleware' => ['create' => [],'index' => [],'delete' => []] // Just Testing
   ]);
@@ -37,7 +38,7 @@ $router->group(['prefix' => '/ibooking/v1'], function (Router $router) {
     'as' => 'api.ibooking.availability',
     'uses' => 'AvailabilityApiController@availability',
   ]);
-  
+
 
 // append
 
